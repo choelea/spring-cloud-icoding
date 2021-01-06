@@ -1,0 +1,46 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /sci-api
+  undertow:
+    # 访问日志
+    accesslog:
+      dir: ./logs
+      enabled: true
+      prefix: ${spring.application.name}
+    # 阻塞任务线程池, 当执行类似servlet请求阻塞IO操作, undertow会从这个线程池中取得线程
+    # 默认值是IO线程数*8,推荐 32 * nCPU
+    worker-threads: 128
+    # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接
+    # 默认设置每个CPU核心一个线程,推荐 4 * n CPU
+    io-threads: 16
+
+spring:
+  application:
+    #服务名称使用英文
+    name: spring-cloud-icoding
+    #使用@project.version@，可以自动从pom文件中获取项目版本号
+    version: '@project.version@'
+  datasource:
+    #数据库地址
+    url: jdbc:mysql://127.0.0.1:3306/t_sci?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    #数据库账号
+    username: root
+    #数据库密码
+    password: 123456
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 3000
+    database: 9
+#    password:
+    lettuce:
+      pool:
+        min-idle: 8
+        max-idle: 16
+        max-active: 1000
+        max-wait: 3000

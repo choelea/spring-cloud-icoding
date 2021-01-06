@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>pom</packaging>
+	<modules>
+		<module>sci-api</module>
+		<module>sci-sdk</module>
+		<module>sci-facade</module>
+		<module>sci-iservice</module>
+	</modules>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.9.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>tech.icoding</groupId>
+	<artifactId>spring-cloud-icoding</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>spring-cloud-icoding</name>
+	<description>Spring Cloud 容器化部署微服务框架; 没有nacos</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<sci.sdk.version>1.1.0</sci.sdk.version>
+		<fast-json.version>1.2.56</fast-json.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>tech.icoding</groupId>
+				<artifactId>sci-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>tech.icoding</groupId>
+				<artifactId>sci-facade</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>tech.icoding</groupId>
+				<artifactId>sci-iservice</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>tech.icoding</groupId>
+				<artifactId>sci-sdk</artifactId>
+				<version>${sci.sdk.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${fast-json.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>2.8.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger-ui</artifactId>
+				<version>2.8.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
