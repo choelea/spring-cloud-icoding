@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>pom</packaging>
 	<modules>
-		<module>sci-api</module>
-		<module>sci-sdk</module>
-		<module>sci-facade</module>
-		<module>sci-iservice</module>
+		<module>api</module>
+		<module>facade</module>
+		<module>iservice</module>
+		<module>sdk</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -19,7 +19,7 @@
 	<artifactId>spring-cloud-icoding</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-cloud-icoding</name>
-	<description>Spring Cloud 容器化部署微服务框架; 没有nacos</description>
+	<description>Spring Cloud 容器化部署微服务框架; 四层模型及; Redis使用示例</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -67,13 +67,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+
 
 </project>
