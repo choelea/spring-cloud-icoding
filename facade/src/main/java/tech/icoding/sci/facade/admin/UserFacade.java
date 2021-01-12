@@ -1,4 +1,4 @@
-package tech.icoding.sci.facade;
+package tech.icoding.sci.facade.admin;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;

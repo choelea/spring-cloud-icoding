@@ -7,14 +7,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Data
 public abstract class BaseEntity<ID extends Serializable> implements Serializable {
 
-	private static final long  serialVersionUID = -67188388306700736L;
-	
 	protected static final int  MAX_LANGUAGE_NUM = 10;
 
 	/**
@@ -36,6 +34,7 @@ public abstract class BaseEntity<ID extends Serializable> implements Serializabl
 	 * "版本"属性名称
 	 */
 	public static final String VERSION_PROPERTY_NAME = "version";
+	private static final long serialVersionUID = 4714864631962932481L;
 
 	@Id
     @Column(length = 20)
@@ -47,14 +46,14 @@ public abstract class BaseEntity<ID extends Serializable> implements Serializabl
 	 */
 	@CreatedDate
 	@Column(nullable = false, updatable = false)
-	private Date createdDate;
+	private LocalDateTime createdDate;
 
 	/**
 	 * 最后修改日期
 	 */
 	@LastModifiedDate
 	@Column(nullable = false)
-	private Date lastModifiedDate;
+	private LocalDateTime lastModifiedDate;
 
 	/**
 	 * 版本
@@ -65,13 +64,13 @@ public abstract class BaseEntity<ID extends Serializable> implements Serializabl
 
 	@PrePersist
 	public void preSave() {
-		this.createdDate = new Date();
-		this.lastModifiedDate = new Date();
+		this.createdDate = LocalDateTime.now();
+		this.lastModifiedDate = LocalDateTime.now();
 	}
 	
 	@PreUpdate
 	public void preUpdate() {
-		this.lastModifiedDate = new Date();
+		this.lastModifiedDate = LocalDateTime.now();
 	}
 
 	/**

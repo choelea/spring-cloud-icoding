@@ -1,10 +1,10 @@
 package tech.icoding.sci.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public abstract  class BaseService<M extends PagingAndSortingRepository<T, ID>, T, ID>{
 
-   @Resource
+   @Autowired
    private M repository;
    public T findById(ID id){
        final Optional<T> optional = repository.findById(id);

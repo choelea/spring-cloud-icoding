@@ -2,9 +2,9 @@ package tech.icoding.sci.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-import tech.icoding.sci.facade.UserFacade;
+import tech.icoding.sci.facade.admin.UserFacade;
 import tech.icoding.sci.sdk.data.UserData;
 import tech.icoding.sci.sdk.form.UserForm;
 
@@ -22,8 +22,8 @@ public class UserController {
     private UserFacade userFacade;
 
     @GetMapping
-    public Page<UserData> get(Pageable pageable) {
-        return userFacade.findAll(pageable);
+    public Page<UserData> get(@RequestParam int page, @RequestParam int size) {
+        return userFacade.findAll(PageRequest.of(page-1, size));
     }
 
     @GetMapping("/{id}")
