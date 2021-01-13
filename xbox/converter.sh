@@ -3,7 +3,7 @@
 package=$1
 domain=$2
 
-targetFolder=facade/src/main/java/${package//\./\/}/facade/converter/todto/${domain}DataConverter.java
+targetFolder=facade/src/main/java/${package//\./\/}/converter/todto/${domain}DataConverter.java
 cat > "${targetFolder}" <<EOF
 package ${package}.facade.converter.todto;
 

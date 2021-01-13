@@ -15,7 +15,7 @@
 		<version>2.2.9.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>tech.icoding</groupId>
+	<groupId>tech.icoding.sci</groupId>
 	<artifactId>spring-cloud-icoding</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-cloud-icoding</name>
@@ -30,22 +30,22 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>tech.icoding</groupId>
+				<groupId>tech.icoding.sci</groupId>
 				<artifactId>sci-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>tech.icoding</groupId>
+				<groupId>tech.icoding.sci</groupId>
 				<artifactId>sci-facade</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>tech.icoding</groupId>
+				<groupId>tech.icoding.sci</groupId>
 				<artifactId>sci-iservice</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>tech.icoding</groupId>
+				<groupId>tech.icoding.sci</groupId>
 				<artifactId>sci-sdk</artifactId>
 				<version>${sci.sdk.version}</version>
 			</dependency>

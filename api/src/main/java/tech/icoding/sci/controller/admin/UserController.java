@@ -1,4 +1,4 @@
-package tech.icoding.sci.controller;
+package tech.icoding.sci.controller.admin;
 
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
@@ -14,8 +14,8 @@ import javax.annotation.Resource;
  * @author : Joe
  * @date : 2021/1/6
  */
-@RestController("用户API")
-@RequestMapping("/users")
+@RestController("用户管理API")
+@RequestMapping("/admin/users")
 @Api(tags = "用户API")
 public class UserController {
     @Resource

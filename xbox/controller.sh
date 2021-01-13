@@ -26,7 +26,7 @@ import javax.annotation.Resource;
  * @date : 2021/1/11
  */
 @RestController
-@RequestMapping("/${domain}s")
+@RequestMapping("/admin/${domainLowerCase}s")
 @Api(tags = "${domain}管理API")
 public class ${domain}Controller {
     @Resource
