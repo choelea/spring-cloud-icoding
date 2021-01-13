@@ -23,31 +23,30 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<sci.sdk.version>1.1.0</sci.sdk.version>
 		<fast-json.version>1.2.56</fast-json.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>tech.icoding.sci</groupId>
-				<artifactId>sci-api</artifactId>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>tech.icoding.sci</groupId>
-				<artifactId>sci-facade</artifactId>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>facade</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>tech.icoding.sci</groupId>
-				<artifactId>sci-iservice</artifactId>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>iservice</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>tech.icoding.sci</groupId>
-				<artifactId>sci-sdk</artifactId>
-				<version>${sci.sdk.version}</version>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>sdk</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.alibaba</groupId>
