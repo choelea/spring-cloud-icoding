@@ -8,7 +8,9 @@ otherLetter=${domain:1}
 firstLetter=$(echo $firstLetter | tr '[A-Z]' '[a-z]')
 domainLowerCase=$firstLetter$otherLetter
 
-targetFile=iservice/src/main/java/${package//\./\/}/entity/${domain}Entity.java
+targetFolder=iservice/src/main/java/${package//\./\/}/entity
+targetFile=$targetFolder/${domain}Entity.java
+mkdir "$targetFolder"
 cat > "${targetFile}" <<EOF
 package ${package}.entity;
 

@@ -4,7 +4,9 @@
 package=$1
 domain=$2
 
-targetFile=iservice/src/main/java/${package//\./\/}/service/${domain}Service.java
+targetFolder=iservice/src/main/java/${package//\./\/}/service
+targetFile=$targetFolder/${domain}Service.java
+mkdir "$targetFolder"
 cat > "${targetFile}" <<EOF
 package ${package}.service;
 

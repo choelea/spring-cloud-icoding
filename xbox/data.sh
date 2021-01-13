@@ -3,7 +3,9 @@
 package=$1
 domain=$2
 
-targetFile=sdk/src/main/java/${package//\./\/}/sdk/data/${domain}Data.java
+targetFolder=sdk/src/main/java/${package//\./\/}/sdk/data
+targetFile=$targetFolder/${domain}Data.java
+mkdir "$targetFolder"
 cat > "${targetFile}" <<EOF
 package ${package}.sdk.data;
 

@@ -7,8 +7,10 @@ otherLetter=${domain:1}
 firstLetter=$(echo $firstLetter | tr '[A-Z]' '[a-z]')
 domainLowerCase=$firstLetter$otherLetter
 
-targetFolder=api/src/main/java/${package//\./\/}/controller/admin/${domain}Controller.java
-cat > "${targetFolder}" <<EOF
+targetFolder=api/src/main/java/${package//\./\/}/controller/admin
+targetFile=$targetFolder/${domain}Controller.java
+mkdir "$targetFolder"
+cat > "${targetFile}" <<EOF
 package ${package}.controller.admin;
 
 import io.swagger.annotations.Api;

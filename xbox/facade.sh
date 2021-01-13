@@ -8,7 +8,9 @@ otherLetter=${domain:1}
 firstLetter=$(echo $firstLetter | tr '[A-Z]' '[a-z]')
 domainLowerCase=$firstLetter$otherLetter
 
-targetFile=facade/src/main/java/${package//\./\/}/facade/admin/${domain}Facade.java
+targetFolder=facade/src/main/java/${package//\./\/}/facade/admin
+targetFile=$targetFolder/${domain}Facade.java
+mkdir "$targetFolder"
 cat > "${targetFile}" <<EOF
 package ${package}.facade.admin;
 
