@@ -44,6 +44,23 @@ spring:
         max-idle: 16
         max-active: 1000
         max-wait: 3000
+  kafka:     # 指定kafka 代理地址，可以多个
+    bootstrap-servers: 10.206.32.8:9092
+    listener:
+      ack-mode: manual_immediate
+    consumer:
+      group-id: ${spring.application.name} # 指定默认消费者group id
+      max-poll-records: 100
+      auto-offset-reset: latest # 最早未被消费的offset
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
+    producer:
+      batch-size: 100 # 每次批量发送消息的数量
+      retries: 3
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
 
 
 logging:
