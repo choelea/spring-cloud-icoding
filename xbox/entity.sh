@@ -15,7 +15,7 @@ cat > "${targetFile}" <<EOF
 package ${package}.entity;
 
 import lombok.Data;
-
+import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -25,9 +25,9 @@ import javax.persistence.Table;
  */
 @Data
 @Entity
+@DynamicUpdate
 @Table(name = "t_${domainLowerCase}s")
 public class ${domain}Entity extends BaseEntity<Long>{
 
-    //private static final long serialVersionUID = -3785545392726922140L;
 }
 EOF

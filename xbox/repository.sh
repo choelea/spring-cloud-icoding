@@ -9,7 +9,7 @@ mkdir "$targetFolder"
 cat > "${targetFile}" <<EOF
 package ${package}.repository;
 
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ${package}.entity.${domain}Entity;
 
@@ -18,6 +18,6 @@ import ${package}.entity.${domain}Entity;
  * @date : 2021/1/11
  */
 @Repository
-public interface ${domain}Repository extends PagingAndSortingRepository<${domain}Entity, Long> {
+public interface ${domain}Repository extends JpaRepository<${domain}Entity, Long> {
 }
 EOF

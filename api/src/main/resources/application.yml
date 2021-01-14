@@ -44,3 +44,9 @@ spring:
         max-idle: 16
         max-active: 1000
         max-wait: 3000
+
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

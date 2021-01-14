@@ -58,7 +58,7 @@ public class ${domain}Facade {
         ${domainLowerCase}Service.deleteById(id);
     }
 
-    public ${domain}Data save(${domain}Form ${domain}Form) {
+    public ${domain}Data save(${domain}Form ${domainLowerCase}Form) {
         ${domain}Entity ${domainLowerCase}Entity = new ${domain}Entity();
         //TODO 将Form的值设置到Entity
         final ${domain}Entity u = ${domainLowerCase}Service.save(${domainLowerCase}Entity);
@@ -67,6 +67,7 @@ public class ${domain}Facade {
 
     public ${domain}Data update(Long id, ${domain}Form ${domainLowerCase}Form) {
         final ${domain}Entity ${domainLowerCase}Entity = ${domainLowerCase}Service.findById(id);
+        ${domainLowerCase}Entity.setId(id);
         //TODO 将 form的值设置到entity
         ${domainLowerCase}Service.update(${domainLowerCase}Entity);
         return converter.convert(${domainLowerCase}Entity);

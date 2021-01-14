@@ -10,6 +10,7 @@ package ${package}.facade.converter.todto;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import ${package}.sdk.common.Constants;
 import ${package}.entity.${domain}Entity;
 import ${package}.sdk.data.${domain}Data;
 
@@ -21,8 +22,9 @@ import ${package}.sdk.data.${domain}Data;
 public class ${domain}DataConverter implements Converter<${domain}Entity, ${domain}Data> {
     @Override
     public ${domain}Data convert(${domain}Entity source) {
-        ${domain}Data target = new ${domain}Data();
-
+        target.setId(source.getId());
+        target.setCreateDate(source.getCreatedDate().format(Constants.DATE_TIME_FORMATTER));
+        target.setLastModifiedDate(source.getLastModifiedDate().format(Constants.DATE_TIME_FORMATTER));
         // TODO 设置 data 内容
         return target;
     }

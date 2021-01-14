@@ -16,7 +16,8 @@ import lombok.Data;
  */
 @Data
 public class ${domain}Data {
-    String createDate;
-    String lastModifiedDate;
+    private Long id;
+    private String createDate;
+    private String lastModifiedDate;
 }
 EOF
