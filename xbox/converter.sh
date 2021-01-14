@@ -22,6 +22,7 @@ import ${package}.sdk.data.${domain}Data;
 public class ${domain}DataConverter implements Converter<${domain}Entity, ${domain}Data> {
     @Override
     public ${domain}Data convert(${domain}Entity source) {
+        ${domain}Data target = new ${domain}Data();
         target.setId(source.getId());
         target.setCreateDate(source.getCreatedDate().format(Constants.DATE_TIME_FORMATTER));
         target.setLastModifiedDate(source.getLastModifiedDate().format(Constants.DATE_TIME_FORMATTER));

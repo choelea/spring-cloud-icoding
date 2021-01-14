@@ -1,0 +1,20 @@
+package tech.icoding.sci.sdk.common;
+
+import java.time.format.DateTimeFormatter;
+
+/**
+ * @author : Joe
+ * @date : 2021/1/14
+ */
+public interface Constants {
+    String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    String DATE_PATTERN = "yyyy-MM-dd";
+    DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
+    interface Topic {
+
+    }
+
+    interface RedisSet {
+
+    }
+}
