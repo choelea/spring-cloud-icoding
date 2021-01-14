@@ -21,13 +21,15 @@ spring:
     name: spring-cloud-icoding
     #使用@project.version@，可以自动从pom文件中获取项目版本号
     version: '@project.version@'
+  profiles:
+    active: dev
   datasource:
     #数据库地址
-    url: jdbc:mysql://127.0.0.1:3306/t_sci?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+#    url: jdbc:mysql://127.0.0.1:3306/t_sci?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
     #数据库账号
-    username: root
+#    username: root
     #数据库密码
-    password: 123456
+#    password: 123456
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -64,6 +66,10 @@ spring:
 
 
 logging:
+  config: classpath:META-INF/logback-${spring.profiles.active}.xml
+  file:
+    max-size: 50MB
+    max-history: 3
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE

@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class BusinessException extends RuntimeException {
+    private static final long serialVersionUID = -8255208523391147163L;
     /**
      * 错误信息
      */
