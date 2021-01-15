@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    #数据库地址
+    url: jdbc:mysql://127.0.0.1:3306/t_sci?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    #数据库账号
+    username: root
+    #数据库密码
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 9
+#    password:
+  kafka:     # 指定kafka 代理地址，可以多个
+    bootstrap-servers: 10.206.32.8:9092
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
