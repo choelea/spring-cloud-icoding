@@ -45,7 +45,7 @@
             <maxFileSize>${MAX_SIZE}</maxFileSize>
         </rollingPolicy>
         <encoder>
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS},%-5level,%X{X-B3-TraceId}-%msg%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS},%-5level,%X{X-TraceId}-%msg%n</Pattern>
         </encoder>
     </appender>
 
@@ -53,7 +53,7 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder charset="UTF-8">
             <pattern>
-                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} [%X{BJ-TRACE-ID}] - %msg %n
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} [%X{X-TraceId}] - %msg %n
             </pattern>
         </encoder>
     </appender>

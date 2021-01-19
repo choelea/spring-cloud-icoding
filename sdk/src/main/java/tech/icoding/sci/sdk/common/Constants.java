@@ -17,4 +17,8 @@ public interface Constants {
     interface RedisChannel {
         String CACHE_REFRESH = "CACHE:REFRESH";
     }
+
+    interface LogContext {
+        String TRACE_ID = "X-TraceId";
+    }
 }

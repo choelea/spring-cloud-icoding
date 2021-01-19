@@ -4,7 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
- 
+
+/**
+ * 此处可以添加用于 spring 上线文加载后处理的逻辑。
+ */
 @Component
 @Slf4j
 public class ContextRefreshedListener implements ApplicationListener<ContextRefreshedEvent>{
@@ -12,11 +15,17 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		log.info("开始初始化数据------------");
+
+		log.info("收到ContextRefreshedEvent事件------------");
 	}
 
+	/**
+	 *
+	 * @param message
+	 */
 	public void onMessage(String message){
-		System.out.println("收到消息："+message);
+		log.info("收到消息："+message);
+		//TODO 多实例同步更新, 比如同步更新内存缓存（如系统配置等）
 	}
 
 }
