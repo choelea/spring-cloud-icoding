@@ -14,7 +14,7 @@ public interface Constants {
 
     }
 
-    interface RedisSet {
-
+    interface RedisChannel {
+        String CACHE_REFRESH = "CACHE:REFRESH";
     }
 }

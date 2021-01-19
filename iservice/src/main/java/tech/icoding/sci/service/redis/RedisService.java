@@ -23,4 +23,8 @@ public class RedisService {
     public String get(String key) {
         return stringRedisTemplate.opsForValue().get(key);
     }
+
+    public void convertAndSend(String channel, String message){
+        stringRedisTemplate.convertAndSend(channel, message);
+    }
 }
