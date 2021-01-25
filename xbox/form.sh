@@ -3,12 +3,12 @@
 package=$1
 domain=$2
 
-targetFolder=sdk/src/main/java/${package//\./\/}/sdk/form
+targetFolder=sdk/src/main/java/${package//\./\/}/sdk/form/admin
 mkdir "$targetFolder"
 targetFile=$targetFolder/${domain}Form.java
 
 cat > "${targetFile}" <<EOF
-package ${package}.sdk.form;
+package ${package}.sdk.form.admin;
 
 import lombok.Data;
 /**
