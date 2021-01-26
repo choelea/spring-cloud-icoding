@@ -20,8 +20,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ${package}.entity.${domain}Entity;
-import ${package}.sdk.data.${domain}Data;
-import ${package}.sdk.form.${domain}Form;
+import ${package}.sdk.data.admin.${domain}Data;
+import ${package}.sdk.form.admin.${domain}Form;
 import ${package}.service.${domain}Service;
 
 import javax.annotation.Resource;

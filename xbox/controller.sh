@@ -17,9 +17,10 @@ import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+import ${package}.core.Result;
 import ${package}.facade.admin.${domain}Facade;
-import ${package}.sdk.data.${domain}Data;
-import ${package}.sdk.form.${domain}Form;
+import ${package}.sdk.data.admin.${domain}Data;
+import ${package}.sdk.form.admin.${domain}Form;
 
 import javax.annotation.Resource;
 
@@ -40,22 +41,26 @@ public class ${domain}Controller {
     }
 
     @GetMapping("/{id}")
-    public ${domain}Data get(@PathVariable("id") Long id) {
-        return ${domainLowerCase}Facade.get(id);
+    public Result get(@PathVariable("id") Long id) {
+        ${domain}Data ${domainLowerCase}Data = ${domainLowerCase}Facade.get(id);
+        return Result.success(${domainLowerCase}Data);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public Result delete(@PathVariable("id") Long id) {
         ${domainLowerCase}Facade.deleteById(id);
+        return Result.success();
     }
     @PostMapping
-    public ${domain}Data create(@RequestBody ${domain}Form ${domainLowerCase}Form) {
-        return ${domainLowerCase}Facade.save(${domainLowerCase}Form);
+    public Result create(@RequestBody ${domain}Form ${domainLowerCase}Form) {
+        ${domain}Data ${domainLowerCase}Data = ${domainLowerCase}Facade.save(${domainLowerCase}Form);
+        return Result.success(${domainLowerCase}Data);
     }
 
     @PutMapping("/{id}")
-    public ${domain}Data update(@PathVariable("id") Long id, @RequestBody ${domain}Form ${domainLowerCase}Form) {
-        return ${domainLowerCase}Facade.update(id, ${domainLowerCase}Form);
+    public Result update(@PathVariable("id") Long id, @RequestBody ${domain}Form ${domainLowerCase}Form) {
+        ${domain}Data ${domainLowerCase}Data = ${domainLowerCase}Facade.update(id, ${domainLowerCase}Form);
+        return Result.success(${domainLowerCase}Data);
     }
 }
 

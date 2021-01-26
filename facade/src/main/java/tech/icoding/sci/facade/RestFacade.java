@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import tech.icoding.sci.sdk.form.Jsonable;
 import tech.icoding.sci.utils.WebUtils;
 
 import javax.annotation.Resource;
@@ -22,34 +23,24 @@ public class RestFacade {
     @Resource
     private RestTemplate restTemplate;
 
-    /**
-     * post请求
-     *
-     * @param url         请求地址
-     * @param headers     请求头
-     * @param requestBody 请求体
-     * @param clazz       返回体class对象
-     * @return 返回体body
-     */
-    private <T> T post(String url, HttpHeaders headers, JSONObject requestBody, Class<T> clazz) {
-        HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
+    public <T> T post(String url, Jsonable requestJson, Class<T> clazz) {
+        //设置请求头
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Jsonable> entity = new HttpEntity<>(requestJson, headers);
         log.info("请求第三方URL:{}, 请求体:{}", url, entity);
-        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(
+        ResponseEntity<T> responseEntity = restTemplate.exchange(
                 url,
                 HttpMethod.POST,
                 entity,
-                JSONObject.class);
-        T t = responseEntity.getBody().toJavaObject(clazz);
+                clazz);
+        T t = responseEntity.getBody();
         log.info("请求第三方URL:{}, 返回:{}", url, t);
         return t;
     }
 
-    public <T> T post(String url, JSONObject requestBody, Class<T> clazz) {
-        //设置请求头
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return post(url, headers, requestBody, clazz);
-    }
+
 
     /**
      * get请求

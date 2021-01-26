@@ -6,9 +6,8 @@ import tech.icoding.sci.repository.UserRepository;
 
 /**
  * @author : Joe
- * @date : 2021/1/6
+ * @date : 2021/1/11
  */
 @Service
 public class UserService extends BaseService<UserRepository, UserEntity, Long>{
-
 }

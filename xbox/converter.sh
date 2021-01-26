@@ -6,13 +6,13 @@ targetFolder=facade/src/main/java/${package//\./\/}/converter/todto
 targetFile=$targetFolder/${domain}DataConverter.java
 mkdir "$targetFolder"
 cat > "${targetFile}" <<EOF
-package ${package}.facade.converter.todto;
+package ${package}.converter.todto;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import ${package}.sdk.common.Constants;
 import ${package}.entity.${domain}Entity;
-import ${package}.sdk.data.${domain}Data;
+import ${package}.sdk.data.admin.${domain}Data;
 
 /**
  * @author : Joe

@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 public class LogInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("即将处理请求: URL:{}", request.getRequestURL());
+        //log.info("即将处理请求: URL:{}", request.getRequestURL());
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("完成请求处理: URL:{}, 返回状态:{}", request.getRequestURL(), response.getStatus());
+        //log.info("完成请求处理: URL:{}, 返回状态:{}", request.getRequestURL(), response.getStatus());
     }
 
     @Override

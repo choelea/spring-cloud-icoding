@@ -64,6 +64,29 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       acks: all
 
+httpclient:
+  #最大连接数
+  max-total: 1024
+  #单路由并发数
+  max-per-route: 512
+  #连接读取超时时间
+  read-timeout: 10000
+  #连接超时时间
+  connection-timeout: 3000
+  #连接池不够用时候等待时间
+  connection-request-timeout: 3000
+  #冲请求数据，POST大量数据，设定为true 需要占用内存
+  enabled-buffer-request-body: false
+  keep-alive:
+    #是否保持长连接
+    enabled: false
+    #长连接保持时间
+    #time: 20000
+  retry:
+    #是否开启重试
+    enabled: true
+    #重试次数
+    count: 3
 
 logging:
   config: classpath:META-INF/logback-${spring.profiles.active}.xml

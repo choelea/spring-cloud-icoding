@@ -4,11 +4,11 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import tech.icoding.sci.sdk.data.UserData;
-import tech.icoding.sci.sdk.form.UserForm;
-import tech.icoding.sci.service.UserService;
+import org.springframework.stereotype.Component;
 import tech.icoding.sci.entity.UserEntity;
+import tech.icoding.sci.sdk.data.admin.UserData;
+import tech.icoding.sci.sdk.form.admin.UserForm;
+import tech.icoding.sci.service.UserService;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -16,11 +16,10 @@ import java.util.List;
 
 /**
  * @author : Joe
- * @date : 2021/1/6
+ * @date : 2021/1/11
  */
-@Service
+@Component
 public class UserFacade {
-
     @Resource
     private UserService userService;
 
@@ -47,18 +46,21 @@ public class UserFacade {
 
     public UserData save(UserForm userForm) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(userForm.getUsername());
         userEntity.setName(userForm.getName());
-        userEntity.setPassword(userForm.getName());
+        userEntity.setPassword(userForm.getPassword());
+        userEntity.setUsername(userForm.getUsername());
+
         final UserEntity u = userService.save(userEntity);
         return converter.convert(u);
     }
 
     public UserData update(Long id, UserForm userForm) {
         final UserEntity userEntity = userService.findById(id);
+        userEntity.setId(id);
+        userEntity.setUsername(userForm.getUsername());
         userEntity.setName(userForm.getName());
-        userEntity.setPassword(userForm.getPassword());
         userService.update(userEntity);
         return converter.convert(userEntity);
     }
 }
+
