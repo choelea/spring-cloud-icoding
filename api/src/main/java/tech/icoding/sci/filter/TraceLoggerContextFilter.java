@@ -23,6 +23,10 @@ public final class TraceLoggerContextFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         MDC.putCloseable(Constants.LogContext.TRACE_ID, RandomStringUtils.randomAlphanumeric(9));
+        log.info("记录请求{}-{}开始，并添加Trace Id", httpServletRequest.getMethod(), httpServletRequest.getRequestURL());
+        long start = System.currentTimeMillis();
         filterChain.doFilter(httpServletRequest, httpServletResponse);
+        log.info("记录请求{}-{}处理结束,返回码:{}, 耗时:{}毫秒", httpServletRequest.getMethod(), httpServletRequest.getRequestURL(),
+                httpServletResponse.getStatus(),System.currentTimeMillis()-start);
     }
 }

@@ -1,11 +1,13 @@
 package tech.icoding.sci.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.handler.MappedInterceptor;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -14,6 +16,7 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import tech.icoding.sci.interceptor.LogInterceptor;
 
 /***
  * swagger配置项
@@ -21,13 +24,16 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-public class SwaggerAutoConfiguration extends WebMvcConfigurationSupport {
+public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Value("${spring.application.name}")
     private String applicationName;
 
     @Value("${spring.application.version}")
     private String applicationVersion;
+
+    @Autowired
+    private LogInterceptor logInterceptor;
 
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -38,6 +44,11 @@ public class SwaggerAutoConfiguration extends WebMvcConfigurationSupport {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
+
+    @Bean
+    public MappedInterceptor timingInterceptor() {
+        return new MappedInterceptor(new String[] { "/**" }, logInterceptor);
+    }
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -47,7 +58,6 @@ public class SwaggerAutoConfiguration extends WebMvcConfigurationSupport {
                 .paths(PathSelectors.any())
                 .build();
     }
-
 
     protected ApiInfo apiInfo() {
         return new ApiInfoBuilder()

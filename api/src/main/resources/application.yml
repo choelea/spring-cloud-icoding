@@ -5,7 +5,7 @@ server:
   undertow:
     # 访问日志
     accesslog:
-      dir: ./logs
+      dir: ./logs  # undertow的access日志只能输出到文件
       enabled: true
       prefix: ${spring.application.name}
     # 阻塞任务线程池, 当执行类似servlet请求阻塞IO操作, undertow会从这个线程池中取得线程
