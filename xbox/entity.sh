@@ -14,7 +14,8 @@ mkdir "$targetFolder"
 cat > "${targetFile}" <<EOF
 package ${package}.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -23,7 +24,8 @@ import javax.persistence.Table;
  * @author : Joe
  * @date : 2021/1/11
  */
-@Data
+@Getter
+@Setter
 @Entity
 @DynamicUpdate
 @Table(name = "t_${domainLowerCase}s")

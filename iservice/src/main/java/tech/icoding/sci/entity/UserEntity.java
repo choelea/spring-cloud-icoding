@@ -1,6 +1,7 @@
 package tech.icoding.sci.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Column;
@@ -11,7 +12,8 @@ import javax.persistence.Table;
  * @author : Joe
  * @date : 2021/1/11
  */
-@Data
+@Getter
+@Setter
 @Entity
 @DynamicUpdate
 @Table(name = "t_users")

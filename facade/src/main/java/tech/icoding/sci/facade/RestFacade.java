@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import tech.icoding.sci.sdk.form.Jsonable;
+import tech.icoding.sci.sdk.Jsonable;
 import tech.icoding.sci.utils.WebUtils;
 
 import javax.annotation.Resource;

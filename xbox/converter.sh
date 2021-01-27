@@ -2,11 +2,11 @@
 
 package=$1
 domain=$2
-targetFolder=facade/src/main/java/${package//\./\/}/converter/todto
+targetFolder=facade/src/main/java/${package//\./\/}/converter/todata
 targetFile=$targetFolder/${domain}DataConverter.java
 mkdir "$targetFolder"
 cat > "${targetFile}" <<EOF
-package ${package}.converter.todto;
+package ${package}.converter.todata;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

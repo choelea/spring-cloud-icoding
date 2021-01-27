@@ -1,4 +1,4 @@
-package tech.icoding.sci.converter.todto;
+package tech.icoding.sci.converter.todata;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package tech.icoding.sci.sdk.form.admin;
 
 import lombok.Data;
-import tech.icoding.sci.sdk.form.Jsonable;
+import tech.icoding.sci.sdk.Jsonable;
 
 /**
  * @author : Joe

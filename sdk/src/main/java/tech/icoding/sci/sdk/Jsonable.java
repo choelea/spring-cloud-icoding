@@ -1,4 +1,4 @@
-package tech.icoding.sci.sdk.form;
+package tech.icoding.sci.sdk;
 
 /**
  * 仅仅用来标记实现此类的需要保证可以序列化成JSON

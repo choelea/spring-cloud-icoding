@@ -10,7 +10,7 @@ targetFile=$targetFolder/${domain}Form.java
 cat > "${targetFile}" <<EOF
 package ${package}.sdk.form.admin;
 
-import tech.icoding.sci.sdk.form.Jsonable;
+import ${package}.sdk.Jsonable;
 import lombok.Data;
 /**
  * @author : Joe
