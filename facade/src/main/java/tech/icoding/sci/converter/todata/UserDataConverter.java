@@ -20,6 +20,7 @@ public class UserDataConverter implements Converter<UserEntity, UserData> {
         target.setLastModifiedDate(source.getLastModifiedDate().format(Constants.DATE_TIME_FORMATTER));
         target.setName(source.getName());
         target.setUsername(source.getUsername());
+        target.setUserType(source.getUserType());
         return target;
     }
 }

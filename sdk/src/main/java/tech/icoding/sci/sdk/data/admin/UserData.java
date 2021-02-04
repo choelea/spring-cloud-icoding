@@ -1,6 +1,7 @@
 package tech.icoding.sci.sdk.data.admin;
 
 import lombok.Data;
+import tech.icoding.sci.sdk.common.UserType;
 
 import java.io.Serializable;
 
@@ -16,4 +17,5 @@ public class UserData implements Serializable {
     private String lastModifiedDate;
     private String username;
     private String name;
+    private UserType userType;
 }

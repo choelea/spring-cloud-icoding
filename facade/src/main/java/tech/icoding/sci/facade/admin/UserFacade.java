@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import tech.icoding.sci.entity.UserEntity;
+import tech.icoding.sci.sdk.common.UserType;
 import tech.icoding.sci.sdk.data.admin.UserData;
 import tech.icoding.sci.sdk.form.admin.UserForm;
 import tech.icoding.sci.service.UserService;
@@ -49,7 +50,7 @@ public class UserFacade {
         userEntity.setName(userForm.getName());
         userEntity.setPassword(userForm.getPassword());
         userEntity.setUsername(userForm.getUsername());
-
+        userEntity.setUserType(UserType.BUYER);
         final UserEntity u = userService.save(userEntity);
         return converter.convert(u);
     }

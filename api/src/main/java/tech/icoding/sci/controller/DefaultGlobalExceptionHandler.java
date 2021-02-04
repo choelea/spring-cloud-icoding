@@ -1,5 +1,6 @@
 package tech.icoding.sci.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.annotation.Primary;
@@ -22,6 +23,7 @@ import tech.icoding.sci.core.Result;
 @ControllerAdvice
 @ConditionalOnMissingBean(name = "exceptionHandler")
 @RestController
+@Slf4j
 public class DefaultGlobalExceptionHandler implements ErrorController {
 
     @Override
@@ -31,26 +33,30 @@ public class DefaultGlobalExceptionHandler implements ErrorController {
     }
 
     @ExceptionHandler(BusinessException.class)
-    public Object bizErrorHandler(BusinessException businessException) {
-        businessException.printStackTrace();
-        return Result.fail(businessException.getError());
+    public Result bizErrorHandler(BusinessException exception) {
+        exception.printStackTrace();
+        log.info("捕获到全局异常:{}", exception.getMessage());
+        return Result.fail(exception.getError());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public Object methodNotSupportedHandler(HttpRequestMethodNotSupportedException exception) {
+    public Result methodNotSupportedHandler(HttpRequestMethodNotSupportedException exception) {
         exception.printStackTrace();
+        log.info("捕获到全局异常:{}", exception.getMessage());
         return Result.fail(Errors.Sys.METHOD_NOT_ALLOWED_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Object notValidParameterHandler(MethodArgumentNotValidException exception) {
+    public Result notValidParameterHandler(MethodArgumentNotValidException exception) {
         exception.printStackTrace();
+        log.info("捕获到全局异常:{}", exception.getMessage());
         return Result.fail(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 
     @ExceptionHandler(Throwable.class)
-    public Object throwableHandler(Throwable cause) {
+    public Result throwableHandler(Throwable cause) {
         cause.printStackTrace();
+        log.info("捕获到全局异常:{}", cause.getMessage());
         return Result.fail(Errors.Sys.SYS_ERROR.getCode(), Errors.Sys.SYS_ERROR.getMessage());
     }
 
