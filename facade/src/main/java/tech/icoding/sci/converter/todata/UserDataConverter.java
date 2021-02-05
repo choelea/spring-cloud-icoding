@@ -2,8 +2,9 @@ package tech.icoding.sci.converter.todata;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-import tech.icoding.sci.sdk.common.Constants;
 import tech.icoding.sci.entity.UserEntity;
+import tech.icoding.sci.sdk.common.Constants;
+import tech.icoding.sci.sdk.common.EnumData;
 import tech.icoding.sci.sdk.data.admin.UserData;
 
 /**
@@ -20,7 +21,7 @@ public class UserDataConverter implements Converter<UserEntity, UserData> {
         target.setLastModifiedDate(source.getLastModifiedDate().format(Constants.DATE_TIME_FORMATTER));
         target.setName(source.getName());
         target.setUsername(source.getUsername());
-        target.setUserType(source.getUserType());
+        target.setUserType(new EnumData(source.getUserType().getCode(),source.getUserType().getDesc()));
         return target;
     }
 }

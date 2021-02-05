@@ -7,4 +7,5 @@ package tech.icoding.sci.sdk.common;
  */
 public interface IEnum {
     Integer getCode();
+    String getDesc();
 }
