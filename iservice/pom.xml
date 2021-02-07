@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-icoding</artifactId>
         <groupId>tech.icoding.sci</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

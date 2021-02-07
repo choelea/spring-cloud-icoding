@@ -17,14 +17,16 @@
 	</parent>
 	<groupId>tech.icoding.sci</groupId>
 	<artifactId>spring-cloud-icoding</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<name>spring-cloud-icoding</name>
 	<description>Spring Cloud 容器化部署微服务框架; 四层模型及; Redis使用示例</description>
 
 	<properties>
+		<revision>1.0.0</revision> <!-- 可以通过命令行参数覆盖此设置, 比如: mvn -Drevision=1.1.1 clean package  -->
 		<java.version>1.8</java.version>
 		<fast-json.version>1.2.56</fast-json.version>
 		<httpclient.version>4.5.9</httpclient.version>
+		<sdk.version>1.0</sdk.version> <!-- 接口版本号只需要两段即可，对应系统版本好的前两段; 注意这里需要手动保持和sdk模块儿同步 -->
 	</properties>
 
 	<dependencyManagement>
@@ -47,7 +49,7 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>sdk</artifactId>
-				<version>${project.version}</version>
+				<version>${sdk.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.alibaba</groupId>
@@ -72,6 +74,4 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-
 </project>
