@@ -1,5 +1,8 @@
 package tech.icoding.sci.config;
 
+import com.alibaba.csp.sentinel.adapter.spring.webmvc.SentinelWebInterceptor;
+import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.DefaultBlockExceptionHandler;
+import com.alibaba.csp.sentinel.adapter.spring.webmvc.config.SentinelWebMvcConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +22,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import tech.icoding.sci.interceptor.LogInterceptor;
 
 /***
- * swagger配置项
- * @author ray
+ * Web MVC 配置
+ * @author Joe
  */
 @Configuration
 @EnableSwagger2
@@ -46,8 +49,34 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 
     @Bean
-    public MappedInterceptor timingInterceptor() {
+    public MappedInterceptor loggingInterceptor() {
         return new MappedInterceptor(new String[] { "/**" }, logInterceptor);
+    }
+    @Bean
+    public MappedInterceptor sentinelInterceptor(){
+        SentinelWebMvcConfig config = new SentinelWebMvcConfig();
+
+        // Depending on your situation, you can choose to process the BlockException via
+        // the BlockExceptionHandler or throw it directly, then handle it
+        // in Spring web global exception handler.
+
+        // config.setBlockExceptionHandler((request, response, e) -> { throw e; });
+
+        // Use the default handler.
+        config.setBlockExceptionHandler(new DefaultBlockExceptionHandler());
+
+        // Custom configuration if necessary
+        config.setHttpMethodSpecify(true);
+        // By default web context is true, means that unify web context(i.e. use the default context name),
+        // in most scenarios that's enough, and it could reduce the memory footprint.
+        // If set it to false, entrance contexts will be separated by different URLs,
+        // which is useful to support "chain" relation flow strategy.
+        // We can change it and view different result in `Resource Chain` menu of dashboard.
+        config.setWebContextUnify(true);
+        config.setOriginParser(request -> request.getHeader("S-user"));
+
+        return new MappedInterceptor(new String[] { "/**" }, new SentinelWebInterceptor(config));
+        // Add sentinel interceptor
     }
     @Bean
     public Docket api() {

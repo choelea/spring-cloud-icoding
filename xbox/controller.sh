@@ -36,7 +36,7 @@ public class ${domain}Controller {
     private ${domain}Facade ${domainLowerCase}Facade;
 
     @GetMapping
-    public Page<${domain}Data> get(@RequestParam int page, @RequestParam int size) {
+    public Page<${domain}Data> get(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         return ${domainLowerCase}Facade.findAll(PageRequest.of(page-1, size));
     }
 

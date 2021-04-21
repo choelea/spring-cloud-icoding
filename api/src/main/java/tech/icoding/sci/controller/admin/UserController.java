@@ -23,7 +23,7 @@ public class UserController {
     private UserFacade userFacade;
 
     @GetMapping
-    public Page<UserData> get(@RequestParam int page, @RequestParam int size) {
+    public Page<UserData> get(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         return userFacade.findAll(PageRequest.of(page-1, size));
     }
 
