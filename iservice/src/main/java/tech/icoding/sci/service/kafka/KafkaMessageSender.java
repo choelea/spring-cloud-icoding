@@ -1,6 +1,7 @@
 package tech.icoding.sci.service.kafka;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,12 @@ public class KafkaMessageSender {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     public void send(String topic, String message){
+        send(topic, RandomStringUtils.random(9), message);
+    }
+
+    public void send(String topic,String key, String message){
         ListenableFuture<SendResult<String, String>> future =
-                kafkaTemplate.send(topic, message);
+                kafkaTemplate.send(topic,key, message);
 
         future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 
