@@ -8,6 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 
 import java.net.InetAddress;
+import java.util.Optional;
 
 @SpringBootApplication
 @Slf4j
@@ -19,9 +20,9 @@ public class Application {
 
 		Environment env = application.getEnvironment();
 		String ip = InetAddress.getLocalHost().getHostAddress();
-		String port = env.getProperty("server.port");
-		String path = env.getProperty("server.servlet.context-path");
-		String serviceName = env.getProperty("spring.application.name");
+		String port = Optional.ofNullable(env.getProperty("server.port")).orElse("8080");
+		String path = Optional.ofNullable(env.getProperty("server.servlet.context-path")).orElse("");
+		String serviceName = Optional.ofNullable(env.getProperty("spring.application.name")).orElse("Spring Boot Application");
 		log.info("\n----------------------------------------------------------\n\t" +
 				"Service:" + serviceName + " is running! Access URLs:\n\t" +
 				"Local: \t\thttp://localhost:" + port + path + "/\n\t" +
