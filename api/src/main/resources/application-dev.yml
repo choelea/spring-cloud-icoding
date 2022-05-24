@@ -1,19 +1,14 @@
 spring:
   datasource:
-    #数据库地址
-    url: jdbc:mysql://127.0.0.1:3306/t_sci?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
-    #数据库账号
+    url: jdbc:mysql://10.3.72.135:3306/demo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
     username: root
-    #数据库密码
-    password: 123456
+    password: Abc#123456
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
   redis:
-    host: 127.0.0.1
-    port: 6379
-    database: 9
-#    password:
+    host: 10.369.41
   kafka:     # 指定kafka 代理地址，可以多个
     bootstrap-servers: 10.206.32.8:9092
 

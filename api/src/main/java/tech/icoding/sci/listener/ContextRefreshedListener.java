@@ -18,14 +18,4 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 		log.info("收到ContextRefreshedEvent事件------------");
 	}
-
-	/**
-	 *
-	 * @param message
-	 */
-	public void onMessage(String message){
-		log.info("收到消息："+message);
-		//TODO 多实例同步更新, 比如同步更新内存缓存（如系统配置等）
-	}
-
 }

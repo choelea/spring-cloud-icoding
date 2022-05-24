@@ -36,10 +36,11 @@ public abstract class BaseEntity<ID extends Serializable> implements Serializabl
 	public static final String VERSION_PROPERTY_NAME = "version";
 	private static final long serialVersionUID = 4714864631962932481L;
 
-	@Id
-    @Column(length = 20)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private ID id;
+	/**
+	 * 获取主键
+	 * @return
+	 */
+	abstract public ID getId();
 
 	/**
 	 * 创建日期

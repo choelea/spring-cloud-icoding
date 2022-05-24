@@ -19,7 +19,7 @@ public abstract class BaseService<M extends JpaRepository<T, ID>, T, ID> {
      * @param id
      * @return
      */
-    public T findById(ID id) {
+    public T find(ID id) {
         return repository.findById(id).get();
     }
 
@@ -30,14 +30,14 @@ public abstract class BaseService<M extends JpaRepository<T, ID>, T, ID> {
      * @return
      */
     @Deprecated
-    public T getOne(ID id){
+    public T get(ID id){
         return repository.getOne(id);
     }
-    public Page<T> findAll(Pageable pageable) {
+    public Page<T> find(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    public void deleteById(ID id) {
+    public void delete(ID id) {
         repository.deleteById(id);
     }
 

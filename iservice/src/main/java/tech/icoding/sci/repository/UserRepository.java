@@ -1,13 +1,11 @@
 package tech.icoding.sci.repository;
 
+import java.lang.Long;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import tech.icoding.sci.entity.UserEntity;
+import tech.icoding.sci.entity.User;
 
-/**
- * @author : Joe
- * @date : 2021/1/11
- */
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaSpecificationExecutor<Long>, JpaRepository<User, Long> {
 }

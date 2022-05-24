@@ -19,6 +19,7 @@ public class Result<T> implements Serializable {
     protected final static int SUCCESS = 0;
     protected final static String SUCCESS_MSG = "SUCCESS";
     public final static int ILLEGAL_ARGUMENT  = 1000000001;
+    private static final long serialVersionUID = -1529312446614691408L;
     /**
      * 业务返回值编码
      * 统一code长度6位

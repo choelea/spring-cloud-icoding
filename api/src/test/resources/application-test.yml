@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Code Generator Example
+    version: 1.0.0
+  datasource:
+    url: jdbc:mysql://10.3.72.135:3306/demo-test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    username: root
+    password: Abc#123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: mysql
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

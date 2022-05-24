@@ -78,6 +78,11 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         return new MappedInterceptor(new String[] { "/**" }, new SentinelWebInterceptor(config));
         // Add sentinel interceptor
     }
+
+    /**
+     * For Swagger
+     * @return
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -88,6 +93,10 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .build();
     }
 
+    /**
+     * For Swagger
+     * @return
+     */
     protected ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title(applicationName)
