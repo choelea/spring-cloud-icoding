@@ -28,7 +28,7 @@
 		<fast-json.version>1.2.56</fast-json.version>
 		<httpclient.version>4.5.9</httpclient.version>
 		<alibaba.sentinel.version>1.8.1</alibaba.sentinel.version>
-		<sdk.version>1.0</sdk.version> <!-- 接口版本号只需要两段即可，对应系统版本好的前两段; 注意这里需要手动保持和sdk模块儿同步 -->
+		<sdk.version>1.0-SNAPSHOT</sdk.version> <!-- 接口版本号只需要两段即可，对应系统版本好的前两段; 注意这里需要手动保持和sdk模块儿同步 -->
 	</properties>
 
 	<dependencyManagement>
