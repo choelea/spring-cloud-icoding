@@ -25,7 +25,7 @@ import tech.icoding.sci.sdk.common.PageData;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class UserTest extends AbstractMvcTest {
+public class UserEntityTest extends AbstractMvcTest {
 
     @Autowired
     private UserRepository userRepository;

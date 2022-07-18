@@ -1,14 +1,17 @@
 package tech.icoding.xcode.generator.builder;
 
+
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.lang.model.element.Modifier;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
@@ -21,49 +24,53 @@ import java.lang.reflect.Type;
 public class FormClassBuilder extends AbstractClassBuilder{
 
     public TypeSpec buildTypeSpec(Class entityClass, String targetClassName) {
-         final TypeSpec.Builder builder = TypeSpec.classBuilder(targetClassName)
+        final TypeSpec.Builder builder = TypeSpec.classBuilder(targetClassName)
                 .addModifiers(Modifier.PUBLIC)
-                 .addSuperinterface(Serializable.class)
+                .addSuperinterface(Serializable.class)
                 .addAnnotation(Data.class);
+
+        builder.addField(generateSerialVersionId());
 
         final Field[] declaredFields = entityClass.getDeclaredFields();
 
         for (int i = 0; i < declaredFields.length; i++) {
             Field field = declaredFields[i];
-            if(!IDENTIFIER_NAME.equals(field.getName())){ // ignore id
 
-                final Annotation[] annotations = field.getAnnotations();
-                final Type genericType = getFieldType(field);
-                final FieldSpec.Builder fieldBuilder = FieldSpec.builder(genericType, field.getName()).addModifiers(Modifier.PRIVATE);
+            if(!isFieldExcluded(field.getName())){ // ignore id
 
-                for (Annotation annotation : annotations) {
-                    if(annotation.annotationType().getName().startsWith("javax.validation.constraints")){ // Keep the same constraints with entity
-                        fieldBuilder.addAnnotation(annotation.annotationType());
+                final ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
+                final OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+                final OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+                if(manyToOne != null || oneToMany!= null || oneToOne != null){
+                    final Type firstGenericParameter = GeneratorUtils.getFirstGenericParameter(field.getDeclaringClass());
+                    if(oneToMany !=null ){
+                        final ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(field.getType(),firstGenericParameter);
+                        final FieldSpec.Builder fieldBuilder = FieldSpec.builder(parameterizedTypeName, field.getName()).addModifiers(Modifier.PRIVATE);
+                        builder.addField(fieldBuilder.build());
+                    } else {
+                        final FieldSpec.Builder fieldBuilder = FieldSpec.builder(firstGenericParameter, field.getName()).addModifiers(Modifier.PRIVATE);
+                        builder.addField(fieldBuilder.build());
                     }
-                }
-                builder.addField(fieldBuilder.build());
 
+                }else{
+                    final FieldSpec.Builder fieldBuilder = FieldSpec.builder(field.getGenericType(), field.getName()).addModifiers(Modifier.PRIVATE);
+                    builder.addField(fieldBuilder.build());
+                }
             }
         }
         return builder.build();
     }
 
+
     /**
-     * 针对ManyToOne 的关系字段，获取One的主键字段类型;
-     * 其他返回基本类型
-     * @param field
+     * 判断属性是否在排除的之外
+     * @param fieldName
      * @return
      */
-    private Type getFieldType(Field field){
-
-        final ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
-        if(manyToOne!=null){
-            log.info(field.getDeclaringClass().toString());
-            log.info(field.getGenericType().getClass().toString());
-            final Type firstGenericParameter = GeneratorUtils.getFirstGenericParameter(field.getDeclaringClass());
-            return firstGenericParameter;
+    protected boolean isFieldExcluded(String fieldName){
+        if(IDENTIFIER_NAME.equals(fieldName) || SERIAL_VERSION_UID.equals(fieldName)){
+            return true;
         }
-        return field.getGenericType();
-
+        return false;
     }
 }

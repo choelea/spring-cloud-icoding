@@ -1,7 +1,10 @@
 package tech.icoding.xcode.generator.builder;
 
+import com.squareup.javapoet.FieldSpec;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.util.StringUtils;
 
+import javax.lang.model.element.Modifier;
 import java.lang.reflect.Type;
 
 /**
@@ -11,6 +14,7 @@ import java.lang.reflect.Type;
  */
 public abstract class AbstractClassBuilder{
     protected static final String IDENTIFIER_NAME ="id";
+    protected static final String SERIAL_VERSION_UID = "serialVersionUID";
     public Type getIdType(Class entityClass) {
         return GeneratorUtils.getFirstGenericParameter(entityClass);
     }
@@ -22,6 +26,15 @@ public abstract class AbstractClassBuilder{
      */
     protected String getVariableName(Class clazz){
         return StringUtils.uncapitalize(clazz.getSimpleName());
+    }
+
+    /**
+     * 生成 serialVersionUID 字段
+     * @return
+     */
+    protected FieldSpec generateSerialVersionId(){
+        return FieldSpec.builder(long.class, SERIAL_VERSION_UID, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                .initializer("$N", RandomUtils.nextLong(10000000000000000L, 999999999999999999L)+"l").build();
     }
 
 

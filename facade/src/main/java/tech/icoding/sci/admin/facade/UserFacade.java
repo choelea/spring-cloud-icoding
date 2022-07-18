@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import tech.icoding.sci.admin.data.UserData;
 import tech.icoding.sci.admin.form.UserForm;
-import tech.icoding.sci.entity.User;
+import tech.icoding.sci.entity.UserEntity;
 import tech.icoding.sci.service.UserService;
 
 @Component
@@ -25,8 +25,8 @@ public class UserFacade {
    * Get by ID
    */
   public UserData get(Long id) {
-    final User user = userService.find(id);
-    final UserData userData = convert(user);
+    final UserEntity userEntity = userService.find(id);
+    final UserData userData = convert(userEntity);
     return userData;
   }
 
@@ -35,7 +35,7 @@ public class UserFacade {
    */
   public Page<UserData> find(int page, int size) {
     final PageRequest pageRequest = PageRequest.of(page, size);
-    final Page<User> entityPage = userService.find(pageRequest);
+    final Page<UserEntity> entityPage = userService.find(pageRequest);
     final List<UserData> dataList = entityPage.getContent().stream().map(entity -> {
                 return convert(entity);
             }).collect(Collectors.toList());
@@ -47,20 +47,20 @@ public class UserFacade {
    * Create Entity and save to database
    */
   public UserData create(UserForm userForm) {
-    User user = new User();
-    convert(userForm,user);
-    user = userService.save(user);
-    return convert(user);
+    UserEntity userEntity = new UserEntity();
+    convert(userForm, userEntity);
+    userEntity = userService.save(userEntity);
+    return convert(userEntity);
   }
 
   /**
    * Update Entity  to database
    */
   public UserData update(Long id, UserForm userForm) {
-    User user = userService.find(id);
-    convert(userForm, user);
-    user = userService.update(user);
-    return convert(user);
+    UserEntity userEntity = userService.find(id);
+    convert(userForm, userEntity);
+    userEntity = userService.update(userEntity);
+    return convert(userEntity);
   }
 
   /**
@@ -73,17 +73,17 @@ public class UserFacade {
   /**
    * Convert form to entity object
    */
-  private void convert(UserForm userForm, User user) {
-    BeanUtils.copyProperties(userForm, user);
+  private void convert(UserForm userForm, UserEntity userEntity) {
+    BeanUtils.copyProperties(userForm, userEntity);
     // TODO Override logic. (Copy properties is not the best solution, but an convenient one, for special logic, add below here )
   }
 
   /**
    * Convert entity to data object
    */
-  private UserData convert(User user) {
+  private UserData convert(UserEntity userEntity) {
     final UserData userData = new UserData();
-    BeanUtils.copyProperties(user, userData);
+    BeanUtils.copyProperties(userEntity, userData);
     // TODO Override logic. (Copy properties is not the best solution, but an convenient one, for special logic, add below here )
     return userData;
   }

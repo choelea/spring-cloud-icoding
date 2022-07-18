@@ -4,6 +4,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import lombok.Data;
+import org.apache.commons.lang3.ClassUtils;
 import tech.icoding.sci.sdk.common.BaseData;
 
 import javax.lang.model.element.Modifier;
@@ -26,11 +27,21 @@ public class DataClassBuilder extends AbstractClassBuilder{
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Data.class).superclass(parameterizedTypeName);
 
-        final Field[] declaredFields = sourceClass.getDeclaredFields();
+        builder.addField(generateSerialVersionId());
 
+        final Field[] declaredFields = sourceClass.getDeclaredFields();
         for (int i = 0; i < declaredFields.length; i++) {
-            builder.addField(declaredFields[i].getGenericType(),declaredFields[i].getName(), Modifier.PRIVATE);
+            if( (!isFieldExcluded(declaredFields[i].getName())) && ClassUtils.isPrimitiveOrWrapper(declaredFields[i].getType())){
+                builder.addField(declaredFields[i].getGenericType(),declaredFields[i].getName(), Modifier.PRIVATE);
+            }
         }
         return builder.build();
+    }
+
+    protected boolean isFieldExcluded(String fieldName){
+        if(SERIAL_VERSION_UID.equals(fieldName)){
+            return true;
+        }
+        return false;
     }
 }

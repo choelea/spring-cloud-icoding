@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity
 @DynamicUpdate
 @Table(name = "t_users")
-public class User extends BaseEntity<Long>{
+public class UserEntity extends BaseEntity<Long>{
     private static final long serialVersionUID = -6711913440613658010L;
 
     @Id

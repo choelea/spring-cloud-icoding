@@ -24,7 +24,6 @@ public class SimpleGenerator {
     private String serviceClassSuffix;
     private String facadeClassSuffix;
     private String controllerClassSuffix;
-    private boolean overwrite = false;
 
     private final DataClassBuilder dataClassBuilder;
     private final FormClassBuilder formClassBuilder;
@@ -49,14 +48,24 @@ public class SimpleGenerator {
         controllerClassBuilder = new ControllerClassBuilder();
     }
 
-    public void setOverwrite(boolean overwrite) {
-        this.overwrite = overwrite;
-    }
 
-    public void generateALl(Class entityClass) throws Exception {
+    /**
+     * 生成相关Java文件，包括Data Form Repository Service Facade Controller
+     * @param entityClass   Domain Class
+     * @param overWrite    一般设置为false， 当监测到有对应业务的Class存在的时候直接返回不做任何代码生成， 如果设置为true，则会重新生成并覆盖
+     * @param mainDomain   是否是主领域，如果是false， 则只生成Data Form Repository Service 代码
+     * @throws Exception
+     */
+    public void generateALl(Class entityClass,boolean overWrite, boolean mainDomain) throws Exception {
         String projectRoot = getProjectRoot(entityClass);
         String bizName = getBizName(entityClass);
         String parentPackageName = getParentPackage(entityClass);
+        final String dataPackageName = parentPackageName + ".admin." + dataClassSuffix.toLowerCase();
+        final String formPackageName = parentPackageName + ".admin." + formClassSuffix.toLowerCase();
+        final String repositoryPackageName = parentPackageName + "." + repositoryClassSuffix.toLowerCase();
+        final String servicePackageName = parentPackageName + "." + serviceClassSuffix.toLowerCase();
+        final String facadePackageName = parentPackageName + ".admin." + facadeClassSuffix.toLowerCase();
+        final String controllerPackageName = parentPackageName + ".admin." + controllerClassSuffix.toLowerCase();
 
         final Type[] genericInterfaces = entityClass.getGenericInterfaces();
         for (int i = 0; i < genericInterfaces.length; i++) {
@@ -64,42 +73,42 @@ public class SimpleGenerator {
         }
         // Generate Data
         final TypeSpec dateTypeSpec = dataClassBuilder.buildTypeSpec(entityClass, bizName + dataClassSuffix);
-        final String dataPackageName = parentPackageName + ".admin." + dataClassSuffix.toLowerCase();
-        generate(getSrcFolder(projectRoot, "sdk"), dataPackageName, dateTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, "sdk"), dataPackageName, dateTypeSpec);
 
         // Generate form Class
         final TypeSpec formTypeSpec = formClassBuilder.buildTypeSpec(entityClass, bizName + formClassSuffix);
-        final String formPackageName = parentPackageName + ".admin." + formClassSuffix.toLowerCase();
-        generate(getSrcFolder(projectRoot, "sdk"), formPackageName, formTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, "sdk"), formPackageName, formTypeSpec);
 
 
         // Generate Repository
         final TypeSpec  repositoryTypeSpec = repositoryClassBuilder.buildTypeSpec(entityClass, bizName + repositoryClassSuffix);
-        final String repositoryPackageName = parentPackageName + "." + repositoryClassSuffix.toLowerCase();
-        generate(getSrcFolder(projectRoot, "iservice"), repositoryPackageName, repositoryTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, "iservice"), repositoryPackageName, repositoryTypeSpec);
+
 
         // Generator Service
         final Class<?> repositoryClass = Class.forName(getFullClassName(repositoryPackageName, repositoryTypeSpec.name));
         final TypeSpec serviceTypeSpec = serviceClassBuilder.buildTypeSpec(entityClass,repositoryClass, bizName + serviceClassSuffix);
-        String servicePackageName = parentPackageName + "." + serviceClassSuffix.toLowerCase();
-        generate(getSrcFolder(projectRoot, "iservice"), servicePackageName, serviceTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, "iservice"), servicePackageName, serviceTypeSpec);
+
+        if(!mainDomain){ // 针对子域，只生成到Repository这个层面
+            return;
+        }
 
         // Generator Facade
         final Class<?> serviceClass = Class.forName(getFullClassName(servicePackageName, serviceTypeSpec.name));
         final Class<?> dataClass = Class.forName(getFullClassName(dataPackageName, dateTypeSpec.name));
         final Class<?> formClass = Class.forName(getFullClassName(formPackageName, formTypeSpec.name));
-        final String facadePackageName = parentPackageName + ".admin." + facadeClassSuffix.toLowerCase();
         final TypeSpec facadeTypeSpec = facadeClassBuilder.buildTypeSpec(entityClass, dataClass, formClass,serviceClass, bizName + facadeClassSuffix);
-        generate(getSrcFolder(projectRoot, "facade"), facadePackageName, facadeTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, "facade"), facadePackageName, facadeTypeSpec);
 
         // Generator Controller
         final Class<?> facadeClass = Class.forName(getFullClassName(facadePackageName, facadeTypeSpec.name));
         final TypeSpec controllerTypeSpec = controllerClassBuilder.buildTypeSpec(entityClass, dataClass, formClass, facadeClass, bizName + controllerClassSuffix, bizName);
-        generate(getSrcFolder(projectRoot, "api"),parentPackageName + ".admin." + controllerClassSuffix.toLowerCase(),controllerTypeSpec);
+        generate(overWrite, getSrcFolder( projectRoot, "api"),controllerPackageName,controllerTypeSpec);
     }
 
-    protected void generate(String srcFolder,String packageName, TypeSpec typeSpec) throws Exception {
-        preGenerateCheck(packageName, typeSpec.name);
+    protected void generate(boolean overWrite, String srcFolder,String packageName, TypeSpec typeSpec) throws Exception {
+        preGenerateCheck(overWrite,packageName, typeSpec.name);
         File file = new File(srcFolder);
         JavaFile javaFile = JavaFile.builder(packageName,typeSpec ).build();
         javaFile.writeTo(file);
@@ -113,7 +122,7 @@ public class SimpleGenerator {
      * @param simpleName
      * @return
      */
-    private void preGenerateCheck(String packageName, String simpleName) throws Exception {
+    private void preGenerateCheck(boolean overwrite, String packageName, String simpleName) throws Exception {
         if(overwrite) return;
         final String fullClassName = getFullClassName(packageName, simpleName);
         try {
@@ -147,9 +156,8 @@ public class SimpleGenerator {
 
     protected String getBizName(Class entityClazz){
         final String simpleName = entityClazz.getSimpleName();
-        return simpleName;
-//        int end = simpleName.indexOf("Entity");
-//        return entityClazz.getSimpleName().substring(0, end );
+        int end = simpleName.indexOf("Entity");
+        return entityClazz.getSimpleName().substring(0, end );
     }
 
     protected String getParentPackage(Class entityClazz){
