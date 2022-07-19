@@ -17,6 +17,7 @@ public class CodesGenerationApp {
 
 //        simpleGenerator.generateALl(Course.class);
 //        simpleGenerator.generateALl(OrderItemEntity.class,true,true);
-        simpleGenerator.generateALl(OrderEntity.class,true,true);
+//        simpleGenerator.generateALl(OrderEntity.class,true,true);
+        simpleGenerator.clean(OrderEntity.class);
     }
 }

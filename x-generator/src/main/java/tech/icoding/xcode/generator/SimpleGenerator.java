@@ -18,20 +18,27 @@ import java.nio.file.Path;
  * @date : 2022/4/28
  */
 public class SimpleGenerator {
-    private String dataClassSuffix;
-    private String formClassSuffix;
-    private String repositoryClassSuffix;
-    private String serviceClassSuffix;
-    private String facadeClassSuffix;
-    private String controllerClassSuffix;
+    private String dataClassSuffix = "Data";
+    private String formClassSuffix = "Form";
+    private String repositoryClassSuffix = "Repository";
+    private String serviceClassSuffix = "Service";
+    private String facadeClassSuffix = "Facade";
+    private String controllerClassSuffix = "Controller";
 
-    private final DataClassBuilder dataClassBuilder;
-    private final FormClassBuilder formClassBuilder;
-    private final DataClassBuilder repositoryClassBuilder;
-    private final ServiceClassBuilder serviceClassBuilder;
-    private final FacadeClassBuilder facadeClassBuilder;
-    private final ControllerClassBuilder controllerClassBuilder;
+    private static final String SDK_MODULE = "sdk";
+    private static final String SERVICE_MODULE = "iservice";
+    private static final String FACADE_MODULE = "facade";
+    private static final String CONTROLLER_MODULE = "api";
 
+    private final DataClassBuilder dataClassBuilder = new DataClassBuilder();
+    private final FormClassBuilder formClassBuilder = new FormClassBuilder();
+    private final DataClassBuilder repositoryClassBuilder = new RepositoryClassBuilder();
+    private final ServiceClassBuilder serviceClassBuilder = new ServiceClassBuilder();
+    private final FacadeClassBuilder facadeClassBuilder = new FacadeClassBuilder();
+    private final ControllerClassBuilder controllerClassBuilder = new ControllerClassBuilder();
+
+    public SimpleGenerator(){
+    }
     public SimpleGenerator(String dataClassSuffix, String formClassSuffix, String repositoryClassSuffix, String serviceClassSuffix,
                            String facadeClassSuffix, String controllerClassSuffix) {
         this.dataClassSuffix = dataClassSuffix;
@@ -40,14 +47,43 @@ public class SimpleGenerator {
         this.serviceClassSuffix = serviceClassSuffix;
         this.facadeClassSuffix = facadeClassSuffix;
         this.controllerClassSuffix = controllerClassSuffix;
-        this.facadeClassBuilder = new FacadeClassBuilder();
-        formClassBuilder = new FormClassBuilder();
-        dataClassBuilder = new DataClassBuilder();
-        repositoryClassBuilder = new RepositoryClassBuilder();
-        serviceClassBuilder = new ServiceClassBuilder();
-        controllerClassBuilder = new ControllerClassBuilder();
     }
 
+
+    public void clean (Class entityClass) throws Exception {
+        final String projectRoot = getProjectRoot(entityClass);
+        final String bizName = getBizName(entityClass);
+        final String dataPackageName = getDataClassPackage(entityClass);
+        final String formPackageName = getFormClassPackage(entityClass);
+        final String repositoryPackageName = getRepositoryClassPackage(entityClass);
+        final String servicePackageName = getServiceClassPackage(entityClass);
+        final String facadePackageName = getFacadeClassPackage(entityClass);
+        final String controllerPackageName = getControllerClassPackage(entityClass);
+
+        String srcFolder = getSrcFolder(projectRoot, SDK_MODULE);
+        String file = getJavaFilePath(new File(srcFolder), dataPackageName, bizName + dataClassSuffix);
+        new File(file).deleteOnExit();
+
+//        srcFolder = getSrcFolder(projectRoot, SDK_MODULE);
+        file = getJavaFilePath(new File(srcFolder), formPackageName, bizName + formClassSuffix);
+        new File(file).deleteOnExit();
+
+        srcFolder = getSrcFolder(projectRoot, SERVICE_MODULE);
+        file = getJavaFilePath(new File(srcFolder), repositoryPackageName, bizName + repositoryClassSuffix);
+        new File(file).deleteOnExit();
+
+//        srcFolder = getSrcFolder(projectRoot, SERVICE_MODULE);
+        file = getJavaFilePath(new File(srcFolder), servicePackageName, bizName + serviceClassSuffix);
+        new File(file).deleteOnExit();
+
+        srcFolder = getSrcFolder(projectRoot, FACADE_MODULE);
+        file = getJavaFilePath(new File(srcFolder), facadePackageName, bizName + facadeClassSuffix);
+        new File(file).deleteOnExit();
+
+        srcFolder = getSrcFolder(projectRoot, CONTROLLER_MODULE);
+        file = getJavaFilePath(new File(srcFolder), controllerPackageName, bizName + controllerClassSuffix);
+        new File(file).deleteOnExit();
+    }
 
     /**
      * 生成相关Java文件，包括Data Form Repository Service Facade Controller
@@ -59,13 +95,12 @@ public class SimpleGenerator {
     public void generateALl(Class entityClass,boolean overWrite, boolean mainDomain) throws Exception {
         String projectRoot = getProjectRoot(entityClass);
         String bizName = getBizName(entityClass);
-        String parentPackageName = getParentPackage(entityClass);
-        final String dataPackageName = parentPackageName + ".admin." + dataClassSuffix.toLowerCase();
-        final String formPackageName = parentPackageName + ".admin." + formClassSuffix.toLowerCase();
-        final String repositoryPackageName = parentPackageName + "." + repositoryClassSuffix.toLowerCase();
-        final String servicePackageName = parentPackageName + "." + serviceClassSuffix.toLowerCase();
-        final String facadePackageName = parentPackageName + ".admin." + facadeClassSuffix.toLowerCase();
-        final String controllerPackageName = parentPackageName + ".admin." + controllerClassSuffix.toLowerCase();
+        final String dataPackageName = getDataClassPackage(entityClass);
+        final String formPackageName = getFormClassPackage(entityClass);
+        final String repositoryPackageName = getRepositoryClassPackage(entityClass);
+        final String servicePackageName = getServiceClassPackage(entityClass);
+        final String facadePackageName = getFacadeClassPackage(entityClass);
+        final String controllerPackageName = getControllerClassPackage(entityClass);
 
         final Type[] genericInterfaces = entityClass.getGenericInterfaces();
         for (int i = 0; i < genericInterfaces.length; i++) {
@@ -73,22 +108,22 @@ public class SimpleGenerator {
         }
         // Generate Data
         final TypeSpec dateTypeSpec = dataClassBuilder.buildTypeSpec(entityClass, bizName + dataClassSuffix);
-        generate(overWrite,getSrcFolder(projectRoot, "sdk"), dataPackageName, dateTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, SDK_MODULE), dataPackageName, dateTypeSpec);
 
         // Generate form Class
         final TypeSpec formTypeSpec = formClassBuilder.buildTypeSpec(entityClass, bizName + formClassSuffix);
-        generate(overWrite,getSrcFolder(projectRoot, "sdk"), formPackageName, formTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, SDK_MODULE), formPackageName, formTypeSpec);
 
 
         // Generate Repository
         final TypeSpec  repositoryTypeSpec = repositoryClassBuilder.buildTypeSpec(entityClass, bizName + repositoryClassSuffix);
-        generate(overWrite,getSrcFolder(projectRoot, "iservice"), repositoryPackageName, repositoryTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, SERVICE_MODULE), repositoryPackageName, repositoryTypeSpec);
 
 
         // Generator Service
         final Class<?> repositoryClass = Class.forName(getFullClassName(repositoryPackageName, repositoryTypeSpec.name));
         final TypeSpec serviceTypeSpec = serviceClassBuilder.buildTypeSpec(entityClass,repositoryClass, bizName + serviceClassSuffix);
-        generate(overWrite,getSrcFolder(projectRoot, "iservice"), servicePackageName, serviceTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, SERVICE_MODULE), servicePackageName, serviceTypeSpec);
 
         if(!mainDomain){ // 针对子域，只生成到Repository这个层面
             return;
@@ -99,12 +134,12 @@ public class SimpleGenerator {
         final Class<?> dataClass = Class.forName(getFullClassName(dataPackageName, dateTypeSpec.name));
         final Class<?> formClass = Class.forName(getFullClassName(formPackageName, formTypeSpec.name));
         final TypeSpec facadeTypeSpec = facadeClassBuilder.buildTypeSpec(entityClass, dataClass, formClass,serviceClass, bizName + facadeClassSuffix);
-        generate(overWrite,getSrcFolder(projectRoot, "facade"), facadePackageName, facadeTypeSpec);
+        generate(overWrite,getSrcFolder(projectRoot, FACADE_MODULE), facadePackageName, facadeTypeSpec);
 
         // Generator Controller
         final Class<?> facadeClass = Class.forName(getFullClassName(facadePackageName, facadeTypeSpec.name));
         final TypeSpec controllerTypeSpec = controllerClassBuilder.buildTypeSpec(entityClass, dataClass, formClass, facadeClass, bizName + controllerClassSuffix, bizName);
-        generate(overWrite, getSrcFolder( projectRoot, "api"),controllerPackageName,controllerTypeSpec);
+        generate(overWrite, getSrcFolder( projectRoot, CONTROLLER_MODULE),controllerPackageName,controllerTypeSpec);
     }
 
     protected void generate(boolean overWrite, String srcFolder,String packageName, TypeSpec typeSpec) throws Exception {
@@ -198,5 +233,35 @@ public class SimpleGenerator {
      */
     protected void loadClassFromFile(File file, String packageName, String name) throws ClassNotFoundException, IOException {
         CompilerUtils.loadFromResource(getFullClassName(packageName, name), getJavaFilePath(file,packageName, name));
+    }
+
+    private String getDataClassPackage(Class entityClass){
+        String parentPackageName = getParentPackage(entityClass);
+        return parentPackageName + ".admin." + dataClassSuffix.toLowerCase();
+    }
+
+    private String getFormClassPackage(Class entityClass){
+        String parentPackageName = getParentPackage(entityClass);
+    return parentPackageName + ".admin." + formClassSuffix.toLowerCase();
+    }
+
+    private String getRepositoryClassPackage(Class entityClass){
+        String parentPackageName = getParentPackage(entityClass);
+        return  parentPackageName + "." + repositoryClassSuffix.toLowerCase();
+    }
+
+    private String getServiceClassPackage(Class entityClass){
+        String parentPackageName = getParentPackage(entityClass);
+        return  parentPackageName + "." + serviceClassSuffix.toLowerCase();
+    }
+
+    private String getFacadeClassPackage(Class entityClass){
+        String parentPackageName = getParentPackage(entityClass);
+        return parentPackageName + ".admin." + facadeClassSuffix.toLowerCase();
+    }
+
+    private String getControllerClassPackage(Class entityClass){
+        String parentPackageName = getParentPackage(entityClass);
+        return parentPackageName + ".admin." + controllerClassSuffix.toLowerCase();
     }
 }
