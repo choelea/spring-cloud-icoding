@@ -1,6 +1,7 @@
 package tech.icoding.sci;
 
-import tech.icoding.sci.entity.OrderEntity;
+import tech.icoding.sci.core.entity.OrderEntity;
+import tech.icoding.sci.core.entity.OrderItemEntity;
 import tech.icoding.xcode.generator.SimpleGenerator;
 
 /**
@@ -18,6 +19,6 @@ public class CodesGenerationApp {
 //        simpleGenerator.generateALl(Course.class);
 //        simpleGenerator.generateALl(OrderItemEntity.class,true,true);
 //        simpleGenerator.generateALl(OrderEntity.class,true,true);
-        simpleGenerator.clean(OrderEntity.class);
+        simpleGenerator.clean(OrderItemEntity.class);
     }
 }

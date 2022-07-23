@@ -14,7 +14,7 @@
 
     <!--业务日志-->
     <appender name="BIZ_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="tech.icoding.sci.core.MultiLevelFilter">
+        <filter class="tech.icoding.sci.api.filter.MultiLevelFilter">
             <level>INFO,WARN</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>

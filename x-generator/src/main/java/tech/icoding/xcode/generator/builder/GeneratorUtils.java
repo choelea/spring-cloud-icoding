@@ -1,37 +1,38 @@
 package tech.icoding.xcode.generator.builder;
 
-import javax.persistence.ManyToOne;
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author : Joe
  * @date : 2022/4/29
  */
 public class GeneratorUtils {
+
+    /**
+     * 返回泛型的第一个参数类型
+     * @param clazz
+     * @return
+     */
     public static Type getFirstGenericParameter(Class clazz){
         return ((ParameterizedType)clazz.getGenericSuperclass())
                 .getActualTypeArguments()[0];
     }
 
     /**
-     * Try to find related Entity Class. (Though OneToOne OneToMany ManyToOne annotation)
-     * @param entityClazz
+     * 获取Entity 类名的前半部分；比如OrderEntity，将返回 Order
+     * @param simpleEntityName
      * @return
      */
-    public static List<Class> findRelatedEntityClass(Class entityClazz){
-        List<Class> list = new ArrayList<>();
-        final Field[] declaredFields = entityClazz.getDeclaredFields();
-
-        for (int i = 0; i < declaredFields.length; i++) {
-            Field field = declaredFields[i];
-            final ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
-
-        }
-        return list;
+    public static String getBizName(String simpleEntityName){
+        final String simpleName = simpleEntityName;
+        int end = simpleName.indexOf("Entity");
+        return simpleName.substring(0, end );
     }
 
+
+
+    public static String getFullClassName(String packageName, String name){
+        return packageName + "." + name;
+    }
 }

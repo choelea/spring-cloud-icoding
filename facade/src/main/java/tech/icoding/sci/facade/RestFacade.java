@@ -6,7 +6,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import tech.icoding.sci.sdk.Jsonable;
-import tech.icoding.sci.utils.WebUtils;
+import tech.icoding.sci.facade.utils.WebUtils;
 
 import javax.annotation.Resource;
 import java.net.URI;

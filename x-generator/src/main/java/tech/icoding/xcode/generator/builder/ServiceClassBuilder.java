@@ -3,8 +3,7 @@ package tech.icoding.xcode.generator.builder;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import org.springframework.stereotype.Service;
-import tech.icoding.sci.service.BaseService;
-
+import tech.icoding.sci.core.service.BaseService;
 import javax.lang.model.element.Modifier;
 import java.lang.reflect.Type;
 

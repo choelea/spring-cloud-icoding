@@ -1,5 +1,6 @@
 package tech.icoding.xcode.generator.builder;
 
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -8,8 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.lang.model.element.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,16 +37,36 @@ public class FacadeClassBuilder extends  AbstractClassBuilder{
 
         final String serviceFieldName = getVariableName(serviceClass);
 
-        MethodSpec constructor = MethodSpec.constructorBuilder()
+        final List<String> relatedEntityNames = getRelatedEntityName(entityClass);
+        final List<FieldSpec> fieldSpecs = new ArrayList<>();
+        fieldSpecs.add(FieldSpec.builder(serviceClass, serviceFieldName, Modifier.PRIVATE).build());
+
+        final MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(serviceClass, serviceFieldName)
-                .addStatement("this.$N = $N", serviceFieldName, serviceFieldName)
-                .build();
+                .addStatement("this.$N = $N", serviceFieldName, serviceFieldName);
+
+        relatedEntityNames.forEach( biz->{
+
+            String className = biz+"Service";
+            Class clazz = null;
+            try {
+                clazz = Class.forName(GeneratorUtils.getFullClassName(serviceClass.getPackage().getName(), className));
+                constructorBuilder.addParameter(clazz, StringUtils.uncapitalize(className));
+                fieldSpecs.add(FieldSpec.builder(clazz, StringUtils.uncapitalize(className), Modifier.PRIVATE).build());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        MethodSpec constructor = constructorBuilder.build();
 
         final TypeSpec.Builder builder = TypeSpec.classBuilder(targetClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Component.class)
-                .addField(serviceClass, serviceFieldName, Modifier.PRIVATE)
+//                .addField(serviceClass, serviceFieldName, Modifier.PRIVATE)
+                .addFields(fieldSpecs)
                 .addMethod(constructor)
                 .addMethod(buildGetMethod(entityClass, dataClass, serviceClass))
                 .addMethod(buildFindMethod(entityClass,dataClass, serviceClass))

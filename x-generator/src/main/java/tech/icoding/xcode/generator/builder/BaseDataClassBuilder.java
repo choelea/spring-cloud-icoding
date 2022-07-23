@@ -5,19 +5,18 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import lombok.Data;
-import tech.icoding.sci.sdk.annotations.DataIgnore;
 import tech.icoding.sci.sdk.common.BaseData;
-
+import tech.icoding.sci.sdk.annotations.DataIgnore;
 import javax.lang.model.element.Modifier;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
 /**
- * 用于生成对应的*DataClass
+ * 用于生成对应的基础的Data Class。 基础的Data Class 不包括关系(OneToMany  OneToOne ManyToOne ManyToMany)的字段
  * @author : Joe
  * @date : 2022/4/28
  */
-public class DataClassBuilder extends AbstractClassBuilder{
+public class BaseDataClassBuilder extends AbstractClassBuilder{
 
     public TypeSpec buildTypeSpec(Class entityClass, String targetClassName) {
         final Type firstGenericParameter = GeneratorUtils.getFirstGenericParameter(entityClass);
@@ -28,20 +27,14 @@ public class DataClassBuilder extends AbstractClassBuilder{
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Data.class).superclass(parameterizedTypeName);
 
-        //
         builder.addField(generateSerialVersionId());
 
         final Field[] declaredFields = sourceClass.getDeclaredFields();
         for (int i = 0; i < declaredFields.length; i++) {
             Field field = declaredFields[i];
-            if( !isFieldExcluded(field.getName()) && !isDataIgnored(field)){
-                if (isToOneRelationField(field)){
-                    final FieldSpec.Builder fieldBuilder = FieldSpec.builder(getToManyFieldType(field), field.getName()).addModifiers(Modifier.PRIVATE);
-                    builder.addField(fieldBuilder.build());
-                } else if(isToManyRelationField(field)) {
-                    final FieldSpec.Builder fieldBuilder = FieldSpec.builder(getToManyFieldType(field), field.getName()).addModifiers(Modifier.PRIVATE);
-                    builder.addField(fieldBuilder.build());
-                } else {
+            if( !isFieldExcluded(field.getName()) && !isDataIgnored(field)
+                    && !isToManyRelationField(field) && !isToOneRelationField(field)){
+                if (!isToOneRelationField(field) || !isToManyRelationField(field)){
                     final FieldSpec.Builder fieldBuilder = FieldSpec.builder(field.getGenericType(), field.getName()).addModifiers(Modifier.PRIVATE);
                     builder.addField(fieldBuilder.build());
                 }

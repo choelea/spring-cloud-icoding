@@ -7,7 +7,6 @@ import tech.icoding.xcode.generator.builder.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -33,6 +32,7 @@ public class SimpleGenerator {
     private final DataClassBuilder dataClassBuilder = new DataClassBuilder();
     private final FormClassBuilder formClassBuilder = new FormClassBuilder();
     private final DataClassBuilder repositoryClassBuilder = new RepositoryClassBuilder();
+    private final BaseDataClassBuilder baseDataClassBuilder = new BaseDataClassBuilder();
     private final ServiceClassBuilder serviceClassBuilder = new ServiceClassBuilder();
     private final FacadeClassBuilder facadeClassBuilder = new FacadeClassBuilder();
     private final ControllerClassBuilder controllerClassBuilder = new ControllerClassBuilder();
@@ -52,8 +52,8 @@ public class SimpleGenerator {
 
     public void clean (Class entityClass) throws Exception {
         final String projectRoot = getProjectRoot(entityClass);
-        final String bizName = getBizName(entityClass);
-        final String dataPackageName = getDataClassPackage(entityClass);
+        final String bizName = GeneratorUtils.getBizName(entityClass.getSimpleName());
+        final String dataPackageName = getBaseDataClassPackage(entityClass);
         final String formPackageName = getFormClassPackage(entityClass);
         final String repositoryPackageName = getRepositoryClassPackage(entityClass);
         final String servicePackageName = getServiceClassPackage(entityClass);
@@ -94,50 +94,48 @@ public class SimpleGenerator {
      */
     public void generateALl(Class entityClass,boolean overWrite, boolean mainDomain) throws Exception {
         String projectRoot = getProjectRoot(entityClass);
-        String bizName = getBizName(entityClass);
-        final String dataPackageName = getDataClassPackage(entityClass);
+        String bizName = GeneratorUtils.getBizName(entityClass.getSimpleName());
+        final String dataPackageName = getBaseDataClassPackage(entityClass);
         final String formPackageName = getFormClassPackage(entityClass);
         final String repositoryPackageName = getRepositoryClassPackage(entityClass);
         final String servicePackageName = getServiceClassPackage(entityClass);
         final String facadePackageName = getFacadeClassPackage(entityClass);
         final String controllerPackageName = getControllerClassPackage(entityClass);
 
-        final Type[] genericInterfaces = entityClass.getGenericInterfaces();
-        for (int i = 0; i < genericInterfaces.length; i++) {
-            System.out.println(genericInterfaces[i]);
-        }
+//        final Type[] genericInterfaces = entityClass.getGenericInterfaces();
+//        for (int i = 0; i < genericInterfaces.length; i++) {
+//            System.out.println(genericInterfaces[i]);
+//        }
         // Generate Data
-        final TypeSpec dateTypeSpec = dataClassBuilder.buildTypeSpec(entityClass, bizName + dataClassSuffix);
+        final TypeSpec dateTypeSpec = baseDataClassBuilder.buildTypeSpec(entityClass, bizName + dataClassSuffix);
         generate(overWrite,getSrcFolder(projectRoot, SDK_MODULE), dataPackageName, dateTypeSpec);
 
         // Generate form Class
         final TypeSpec formTypeSpec = formClassBuilder.buildTypeSpec(entityClass, bizName + formClassSuffix);
         generate(overWrite,getSrcFolder(projectRoot, SDK_MODULE), formPackageName, formTypeSpec);
 
-
         // Generate Repository
         final TypeSpec  repositoryTypeSpec = repositoryClassBuilder.buildTypeSpec(entityClass, bizName + repositoryClassSuffix);
         generate(overWrite,getSrcFolder(projectRoot, SERVICE_MODULE), repositoryPackageName, repositoryTypeSpec);
 
-
         // Generator Service
-        final Class<?> repositoryClass = Class.forName(getFullClassName(repositoryPackageName, repositoryTypeSpec.name));
+        final Class<?> repositoryClass = Class.forName(GeneratorUtils.getFullClassName(repositoryPackageName, repositoryTypeSpec.name));
         final TypeSpec serviceTypeSpec = serviceClassBuilder.buildTypeSpec(entityClass,repositoryClass, bizName + serviceClassSuffix);
         generate(overWrite,getSrcFolder(projectRoot, SERVICE_MODULE), servicePackageName, serviceTypeSpec);
 
-        if(!mainDomain){ // 针对子域，只生成到Repository这个层面
+        if( !mainDomain ){ // 针对子域，只生成到Repository这个层面
             return;
         }
 
         // Generator Facade
-        final Class<?> serviceClass = Class.forName(getFullClassName(servicePackageName, serviceTypeSpec.name));
-        final Class<?> dataClass = Class.forName(getFullClassName(dataPackageName, dateTypeSpec.name));
-        final Class<?> formClass = Class.forName(getFullClassName(formPackageName, formTypeSpec.name));
+        final Class<?> serviceClass = Class.forName(GeneratorUtils.getFullClassName(servicePackageName, serviceTypeSpec.name));
+        final Class<?> dataClass = Class.forName(GeneratorUtils.getFullClassName(dataPackageName, dateTypeSpec.name));
+        final Class<?> formClass = Class.forName(GeneratorUtils.getFullClassName(formPackageName, formTypeSpec.name));
         final TypeSpec facadeTypeSpec = facadeClassBuilder.buildTypeSpec(entityClass, dataClass, formClass,serviceClass, bizName + facadeClassSuffix);
         generate(overWrite,getSrcFolder(projectRoot, FACADE_MODULE), facadePackageName, facadeTypeSpec);
 
         // Generator Controller
-        final Class<?> facadeClass = Class.forName(getFullClassName(facadePackageName, facadeTypeSpec.name));
+        final Class<?> facadeClass = Class.forName(GeneratorUtils.getFullClassName(facadePackageName, facadeTypeSpec.name));
         final TypeSpec controllerTypeSpec = controllerClassBuilder.buildTypeSpec(entityClass, dataClass, formClass, facadeClass, bizName + controllerClassSuffix, bizName);
         generate(overWrite, getSrcFolder( projectRoot, CONTROLLER_MODULE),controllerPackageName,controllerTypeSpec);
     }
@@ -159,7 +157,7 @@ public class SimpleGenerator {
      */
     private void preGenerateCheck(boolean overwrite, String packageName, String simpleName) throws Exception {
         if(overwrite) return;
-        final String fullClassName = getFullClassName(packageName, simpleName);
+        final String fullClassName = GeneratorUtils.getFullClassName(packageName, simpleName);
         try {
             Class.forName(fullClassName);
         } catch (ClassNotFoundException e) {
@@ -189,22 +187,6 @@ public class SimpleGenerator {
         return classFolder.getParentFile().getParentFile().getParent();
     }
 
-    protected String getBizName(Class entityClazz){
-        final String simpleName = entityClazz.getSimpleName();
-        int end = simpleName.indexOf("Entity");
-        return entityClazz.getSimpleName().substring(0, end );
-    }
-
-    protected String getParentPackage(Class entityClazz){
-        final String name = entityClazz.getPackage().getName();
-        final int end = name.lastIndexOf(".");
-        return name.substring(0, end);
-    }
-
-    protected String getFullClassName(String packageName, String name){
-        return packageName + "." + name;
-    }
-
     /**
      * Get the full path of java file
      * @param directory  the source folder
@@ -232,36 +214,44 @@ public class SimpleGenerator {
      * @throws MalformedURLException
      */
     protected void loadClassFromFile(File file, String packageName, String name) throws ClassNotFoundException, IOException {
-        CompilerUtils.loadFromResource(getFullClassName(packageName, name), getJavaFilePath(file,packageName, name));
+        CompilerUtils.loadFromResource(GeneratorUtils.getFullClassName(packageName, name), getJavaFilePath(file,packageName, name));
     }
 
-    private String getDataClassPackage(Class entityClass){
+    private String getBaseDataClassPackage(Class entityClass){
         String parentPackageName = getParentPackage(entityClass);
-        return parentPackageName + ".admin." + dataClassSuffix.toLowerCase();
+        return parentPackageName + ".sdk." + dataClassSuffix.toLowerCase();
     }
 
     private String getFormClassPackage(Class entityClass){
         String parentPackageName = getParentPackage(entityClass);
-    return parentPackageName + ".admin." + formClassSuffix.toLowerCase();
+        return parentPackageName + ".sdk." + formClassSuffix.toLowerCase() + ".admin";
     }
 
     private String getRepositoryClassPackage(Class entityClass){
         String parentPackageName = getParentPackage(entityClass);
-        return  parentPackageName + "." + repositoryClassSuffix.toLowerCase();
+        return  parentPackageName + ".core." + repositoryClassSuffix.toLowerCase();
     }
 
     private String getServiceClassPackage(Class entityClass){
         String parentPackageName = getParentPackage(entityClass);
-        return  parentPackageName + "." + serviceClassSuffix.toLowerCase();
+        return  parentPackageName + ".core." + serviceClassSuffix.toLowerCase();
     }
 
     private String getFacadeClassPackage(Class entityClass){
         String parentPackageName = getParentPackage(entityClass);
-        return parentPackageName + ".admin." + facadeClassSuffix.toLowerCase();
+        return parentPackageName + ".facade." + facadeClassSuffix.toLowerCase() + ".admin";
     }
 
     private String getControllerClassPackage(Class entityClass){
         String parentPackageName = getParentPackage(entityClass);
-        return parentPackageName + ".admin." + controllerClassSuffix.toLowerCase();
+        return parentPackageName + ".api." + controllerClassSuffix.toLowerCase() + ".admin";
+    }
+
+    public static String getParentPackage(Class entityClazz){
+        String name = entityClazz.getPackage().getName();
+        int end = name.lastIndexOf(".");
+        name =  name.substring(0, end);
+        end = name.lastIndexOf(".");
+        return name.substring(0, end);
     }
 }

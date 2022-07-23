@@ -34,7 +34,7 @@ mvn archetype:generate -DarchetypeCatalog=local
 
 #### 接口Web层 - api
 API接口暴露模块儿， 一些拦截器/过滤器在这里实现；同时整个服务的相关启动配置也在这个模块儿的`*.config`包里实现。
-初始化需要加载的逻辑可以放在`tech.icoding.sci.listener.ContextRefreshedListener`中实现。
+初始化需要加载的逻辑可以放在`tech.icoding.sci.api.listener.ContextRefreshedListener`中实现。
 
 
 
