@@ -26,12 +26,6 @@ import tech.icoding.sci.facade.result.Result;
 @Slf4j
 public class DefaultGlobalExceptionHandler implements ErrorController {
 
-    @Override
-    public String getErrorPath() {
-        //todo 如果发生异常，默认跳转的页面
-        return "/error";
-    }
-
     @ExceptionHandler(BusinessException.class)
     public Result bizErrorHandler(BusinessException exception) {
         exception.printStackTrace();

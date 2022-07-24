@@ -47,14 +47,14 @@ public abstract class BaseEntity<ID extends Serializable> implements Serializabl
 	 */
 	@CreatedDate
 	@Column(nullable = false, updatable = false)
-	private LocalDateTime createdDate;
+	private LocalDateTime createdTime;
 
 	/**
 	 * 最后修改日期
 	 */
 	@LastModifiedDate
 	@Column(nullable = false)
-	private LocalDateTime lastModifiedDate;
+	private LocalDateTime lastModifiedTime;
 
 	/**
 	 * 版本
@@ -65,13 +65,13 @@ public abstract class BaseEntity<ID extends Serializable> implements Serializabl
 
 	@PrePersist
 	public void preSave() {
-		this.createdDate = LocalDateTime.now();
-		this.lastModifiedDate = LocalDateTime.now();
+		this.createdTime = LocalDateTime.now();
+		this.lastModifiedTime = LocalDateTime.now();
 	}
 	
 	@PreUpdate
 	public void preUpdate() {
-		this.lastModifiedDate = LocalDateTime.now();
+		this.lastModifiedTime = LocalDateTime.now();
 	}
 
 	/**
