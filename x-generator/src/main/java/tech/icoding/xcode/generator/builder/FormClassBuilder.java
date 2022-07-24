@@ -5,7 +5,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeSpec;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import tech.icoding.sci.sdk.annotations.FormIgnore;
+import tech.icoding.sci.core.annotation.FormIgnore;
 import javax.lang.model.element.Modifier;
 import java.io.Serializable;
 import java.lang.reflect.Field;

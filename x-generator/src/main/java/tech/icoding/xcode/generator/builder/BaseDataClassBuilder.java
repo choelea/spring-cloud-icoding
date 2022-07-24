@@ -6,7 +6,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import lombok.Data;
 import tech.icoding.sci.sdk.common.BaseData;
-import tech.icoding.sci.sdk.annotations.DataIgnore;
+import tech.icoding.sci.core.annotation.DataIgnore;
 import javax.lang.model.element.Modifier;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

@@ -1,4 +1,4 @@
-package tech.icoding.sci.core.components.httpclient;
+package tech.icoding.sci.facade.components.httpclient;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.HttpClient;

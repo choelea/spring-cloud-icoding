@@ -1,4 +1,4 @@
-package tech.icoding.sci.sdk.common;
+package tech.icoding.sci.core.entity;
 
 /**
  * Enum 需要继承的接口

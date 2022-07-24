@@ -9,9 +9,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
-import tech.icoding.sci.sdk.common.BusinessException;
-import tech.icoding.sci.sdk.common.Errors;
-import tech.icoding.sci.sdk.common.Result;
+import tech.icoding.sci.core.common.BusinessException;
+import tech.icoding.sci.facade.result.Errors;
+import tech.icoding.sci.facade.result.Result;
 
 /***
  * 统一异常处理

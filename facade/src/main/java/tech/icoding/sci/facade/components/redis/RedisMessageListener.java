@@ -1,4 +1,4 @@
-package tech.icoding.sci.core.components.redis;
+package tech.icoding.sci.facade.components.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

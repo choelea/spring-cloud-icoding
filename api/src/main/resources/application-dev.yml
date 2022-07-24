@@ -8,7 +8,7 @@ spring:
     hibernate:
       ddl-auto: update
   redis:
-    host: 10.369.41
+    host: 10.3.69.41
   kafka:     # 指定kafka 代理地址，可以多个
     bootstrap-servers: 10.206.32.8:9092
 

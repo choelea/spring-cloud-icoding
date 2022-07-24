@@ -3,9 +3,10 @@ package tech.icoding.sci.core.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
-import tech.icoding.sci.sdk.common.UserType;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author : Joe
@@ -24,13 +25,32 @@ public class UserEntity extends BaseEntity<Long>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private UserType userType;
+    @Column(length = 64)
+    private String userName;
 
-    @Column(length = 100, nullable = false, unique = true)
-    private String username;
-    @Column(length = 100, nullable = false)
-    private String name;
+    @Column(length = 64)
+    private String nickName;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 64)
     private String password;
+
+    @Column(length = 64)
+    private String salt;
+
+    private Integer enableFlag;
+
+    @Column(length = 64)
+    private String phone;
+
+    @Column(length = 64)
+    private String email;
+
+    @Column(length = 64)
+    private String remark;
+
+    private Integer delFlag;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<RoleEntity> roles = new HashSet<>();
+
 }

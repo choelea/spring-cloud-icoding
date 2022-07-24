@@ -7,7 +7,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import tech.icoding.sci.sdk.common.Constants;
+import tech.icoding.sci.core.common.Constants;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

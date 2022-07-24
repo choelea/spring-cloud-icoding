@@ -1,4 +1,4 @@
-package tech.icoding.sci.core.components.httpclient;
+package tech.icoding.sci.facade.components.httpclient;
 
 import lombok.Data;
 import lombok.ToString;

@@ -1,7 +1,7 @@
 package tech.icoding.sci.core.entity.converter;
 
 import org.springframework.stereotype.Component;
-import tech.icoding.sci.sdk.common.UserType;
+import tech.icoding.sci.core.entity.UserType;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

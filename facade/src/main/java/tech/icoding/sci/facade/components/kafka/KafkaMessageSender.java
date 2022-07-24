@@ -1,4 +1,4 @@
-package tech.icoding.sci.core.components.kafka;
+package tech.icoding.sci.facade.components.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;

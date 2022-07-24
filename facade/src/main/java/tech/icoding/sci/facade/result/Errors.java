@@ -1,4 +1,6 @@
-package tech.icoding.sci.sdk.common;
+package tech.icoding.sci.facade.result;
+
+import tech.icoding.sci.core.common.ErrorCodeAndMessage;
 
 /**
  * 定义异常常量

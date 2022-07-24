@@ -1,4 +1,4 @@
-package tech.icoding.sci.sdk.common;
+package tech.icoding.sci.core.entity;
 
 /**
  * @author : Joe

@@ -1,4 +1,4 @@
-package tech.icoding.sci.sdk.annotations;
+package tech.icoding.sci.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

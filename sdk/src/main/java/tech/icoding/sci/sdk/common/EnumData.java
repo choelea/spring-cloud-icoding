@@ -7,7 +7,7 @@ import lombok.Data;
  * @date : 2021/2/5
  */
 @Data
-public class EnumData implements IEnum{
+public class EnumData{
     private Integer code;
     private String desc;
 

@@ -1,4 +1,4 @@
-package tech.icoding.sci.core.components.redis;
+package tech.icoding.sci.facade.components.redis;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

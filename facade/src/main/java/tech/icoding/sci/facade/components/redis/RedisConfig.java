@@ -1,4 +1,4 @@
-package tech.icoding.sci.core.components.redis;
+package tech.icoding.sci.facade.components.redis;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -7,7 +7,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import tech.icoding.sci.sdk.common.Constants;
+import tech.icoding.sci.core.common.Constants;
 
 /**
  * @author : Joe

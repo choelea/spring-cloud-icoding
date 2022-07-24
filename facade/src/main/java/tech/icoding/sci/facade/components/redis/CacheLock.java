@@ -1,11 +1,11 @@
-package tech.icoding.sci.core.components.redis;
+package tech.icoding.sci.facade.components.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import tech.icoding.sci.sdk.common.BusinessException;
-import tech.icoding.sci.sdk.common.Errors;
+import tech.icoding.sci.core.common.BusinessException;
+import tech.icoding.sci.facade.result.Errors;
 
 import javax.annotation.Resource;
 import java.time.Duration;

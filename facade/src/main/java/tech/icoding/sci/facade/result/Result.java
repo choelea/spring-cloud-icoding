@@ -1,8 +1,11 @@
-package tech.icoding.sci.sdk.common;
+package tech.icoding.sci.facade.result;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import tech.icoding.sci.core.common.BusinessException;
+import tech.icoding.sci.core.common.CodeAndMessage;
+import tech.icoding.sci.core.common.ErrorCodeAndMessage;
 
 import java.io.Serializable;
 
