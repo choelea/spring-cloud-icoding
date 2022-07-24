@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
  * @date : 2022/5/24
  */
 @Slf4j
-@Component
 public class RedisMessageListener {
     /**
      *

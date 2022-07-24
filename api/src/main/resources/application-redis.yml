@@ -1,10 +1,10 @@
 spring:
   redis:
-    host: 127.0.0.1
+    host: 10.3.69.41
     port: 6379
     timeout: 3000
+    password: vPmUKab7ME
     database: 9
-    #    password:
     lettuce:
       pool:
         min-idle: 8

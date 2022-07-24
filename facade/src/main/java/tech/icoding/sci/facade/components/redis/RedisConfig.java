@@ -34,11 +34,11 @@ public class RedisConfig {
 
     /**
      * 消息监听适配器，绑定消息接收器
-     * @param redisMessageListener 消息接收器
      * @return
      */
     @Bean(name = "listenerAdapter")
-    MessageListenerAdapter contextRefreshedListener(RedisMessageListener redisMessageListener) {
+    MessageListenerAdapter listenerAdapter() {
+        RedisMessageListener redisMessageListener = new RedisMessageListener();
         //利用反射技术，调用消息处理方法
         return new MessageListenerAdapter(redisMessageListener, "onMessage");
     }

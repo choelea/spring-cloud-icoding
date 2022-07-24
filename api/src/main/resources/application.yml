@@ -23,7 +23,8 @@ spring:
     version: '@project.version@'
   profiles:
     active: dev
-    include: kafka,redis, httpclient
+    include: httpclient
+  #    include: kafka,redis, httpclient
   datasource:
     #数据库地址
 #    url: jdbc:mysql://127.0.0.1:3306/t_sci?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
