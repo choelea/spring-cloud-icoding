@@ -1,4 +1,4 @@
-package tech.icoding.sci.sdk.form.admin;
+package tech.icoding.sci.sdk.form;
 
 import java.io.Serializable;
 import java.lang.Integer;
@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 public class UserForm implements Serializable {
-  private static final long serialVersionUID = 812166257993381264l;
+  private static final long serialVersionUID = 420412575991064786l;
 
   private String userName;
 

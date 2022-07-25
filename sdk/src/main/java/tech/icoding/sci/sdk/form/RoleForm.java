@@ -1,4 +1,4 @@
-package tech.icoding.sci.sdk.form.admin;
+package tech.icoding.sci.sdk.form;
 
 import java.io.Serializable;
 import java.lang.String;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class RoleForm implements Serializable {
-  private static final long serialVersionUID = 352134059549548974l;
+  private static final long serialVersionUID = 953819028459653650l;
 
   private String name;
 

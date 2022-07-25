@@ -50,7 +50,14 @@ public class UserEntity extends BaseEntity<Long>{
 
     private Integer delFlag;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToOne
+    private RoleEntity mainRole;
+
+    @ManyToMany
+    @JoinTable(
+            name = "t_role_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles = new HashSet<>();
 
 }

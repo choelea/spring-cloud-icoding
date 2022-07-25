@@ -1,4 +1,4 @@
-package tech.icoding.xcode.generator.builder;
+package tech.icoding.xcode.builder;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -8,23 +8,24 @@ import lombok.Data;
 import tech.icoding.sci.sdk.common.BaseData;
 import tech.icoding.xcode.generator.field.ExEntityClass;
 import tech.icoding.xcode.generator.field.ExField;
+import tech.icoding.xcode.model.ClassTree;
 
 import javax.lang.model.element.Modifier;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.List;
 /**
  * 用于生成对应的基础的Data Class。 基础的Data Class 不包括关系(OneToMany  OneToOne ManyToOne ManyToMany)的字段
  * @author : Joe
  * @date : 2022/4/28
  */
-public class BaseDataClassBuilder extends AbstractClassBuilder{
+public class BaseDataClassBuilder extends AbstractBuilder {
 
-    public TypeSpec buildTypeSpec(ExEntityClass exEntityClass, String targetClassName) {
-        final Type firstGenericParameter = exEntityClass.getIdType();
+    public TypeSpec buildTypeSpec(ClassTree classTree, String simpleClassName) {
+
+        ExEntityClass exEntityClass = classTree.getExEntityClass();
         final ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(ClassName.get(BaseData.class),
-                ClassName.get(firstGenericParameter));
-        final TypeSpec.Builder builder = TypeSpec.classBuilder(targetClassName)
+                ClassName.get(exEntityClass.getIdType()));
+        final TypeSpec.Builder builder = TypeSpec.classBuilder(simpleClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Data.class).superclass(parameterizedTypeName);
 

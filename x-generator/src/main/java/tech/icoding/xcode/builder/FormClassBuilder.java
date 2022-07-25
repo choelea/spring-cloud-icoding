@@ -1,4 +1,4 @@
-package tech.icoding.xcode.generator.builder;
+package tech.icoding.xcode.builder;
 
 
 import com.squareup.javapoet.FieldSpec;
@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import tech.icoding.xcode.generator.field.ExEntityClass;
 import tech.icoding.xcode.generator.field.ExField;
+import tech.icoding.xcode.model.ClassTree;
 
 import javax.lang.model.element.Modifier;
 import java.io.Serializable;
@@ -19,9 +20,11 @@ import java.util.List;
  * @date : 2022/4/28
  */
 @Slf4j
-public class FormClassBuilder extends AbstractClassBuilder{
+public class FormClassBuilder extends AbstractBuilder {
 
-    public TypeSpec buildTypeSpec(ExEntityClass exEntityClass, String targetClassName) {
+    public TypeSpec buildTypeSpec(ClassTree classTree, String targetClassName) {
+
+        ExEntityClass exEntityClass = classTree.getExEntityClass();
         final TypeSpec.Builder builder = TypeSpec.classBuilder(targetClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addSuperinterface(Serializable.class)
@@ -77,18 +80,4 @@ public class FormClassBuilder extends AbstractClassBuilder{
         final Type idType = exField.getRelatedEntityIdType();
         return  ParameterizedTypeName.get(exField.getField().getType(), idType);
     }
-
-    /**
-     * 判断属性是否在排除的之外
-     * @param fieldName
-     * @return
-     */
-    protected boolean isFieldExcluded(String fieldName){
-        if(IDENTIFIER_NAME.equals(fieldName) || SERIAL_VERSION_UID.equals(fieldName)
-            || DEL_FLAG.equals(fieldName)){
-            return true;
-        }
-        return false;
-    }
-
 }

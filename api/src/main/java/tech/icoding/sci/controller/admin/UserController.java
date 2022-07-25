@@ -1,4 +1,4 @@
-package tech.icoding.sci.api.controller.admin;
+package tech.icoding.sci.controller.admin;
 
 import java.lang.Long;
 import org.springframework.data.domain.Page;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tech.icoding.sci.facade.facade.admin.UserFacade;
+import tech.icoding.sci.facade.admin.UserFacade;
 import tech.icoding.sci.sdk.common.PageData;
 import tech.icoding.sci.sdk.data.UserData;
-import tech.icoding.sci.sdk.form.admin.UserForm;
+import tech.icoding.sci.sdk.form.UserForm;
 
 @RestController
 @RequestMapping("/users")
@@ -30,8 +30,8 @@ public class UserController {
    */
   @GetMapping("/{id}")
   public UserData get(@PathVariable final Long id) {
-    final UserData userData = userFacade.get(id);
-    return userData;
+    final UserData data = userFacade.get(id);
+    return data;
   }
 
   @GetMapping
@@ -45,16 +45,16 @@ public class UserController {
    * Create
    */
   @PostMapping
-  public UserData create(@RequestBody final UserForm userForm) {
-    return userFacade.create(userForm);
+  public UserData create(@RequestBody final UserForm form) {
+    return userFacade.create(form);
   }
 
   /**
    * Create
    */
   @PutMapping("/{id}")
-  public UserData update(@PathVariable final Long id, @RequestBody final UserForm userForm) {
-    return userFacade.update(id, userForm);
+  public UserData update(@PathVariable final Long id, @RequestBody final UserForm form) {
+    return userFacade.update(id, form);
   }
 
   /**

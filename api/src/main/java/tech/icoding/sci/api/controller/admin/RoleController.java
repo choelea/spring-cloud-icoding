@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tech.icoding.sci.facade.facade.admin.RoleFacade;
+import tech.icoding.sci.facade.admin.RoleFacade;
 import tech.icoding.sci.sdk.common.PageData;
 import tech.icoding.sci.sdk.data.RoleData;
 import tech.icoding.sci.sdk.form.admin.RoleForm;

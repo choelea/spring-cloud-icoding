@@ -40,13 +40,13 @@ public class RoleEntity extends BaseEntity<Long>{
 
     private Integer delFlag;
 
+
+    /**
+     * mappedBy = "roles" 表明了关系是交由UserEntity来维护，这里很重要。因为Role是独立User先创建的，而创建User需要选定指定的Role。
+     */
     @DataIgnore
     @FormIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "t_role_user",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<UserEntity> users;
 
 }

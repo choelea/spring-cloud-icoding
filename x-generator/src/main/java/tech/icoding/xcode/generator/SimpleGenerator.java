@@ -4,6 +4,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import net.openhft.compiler.CompilerUtils;
 import tech.icoding.xcode.generator.builder.*;
+import tech.icoding.xcode.generator.field.ExEntityClass;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +30,9 @@ public class SimpleGenerator {
     private static final String FACADE_MODULE = "facade";
     private static final String CONTROLLER_MODULE = "api";
 
-    private final DataClassBuilder dataClassBuilder = new DataClassBuilder();
+    private final DetailDataClassBuilder detailDataClassBuilder = new DetailDataClassBuilder();
     private final FormClassBuilder formClassBuilder = new FormClassBuilder();
-    private final DataClassBuilder repositoryClassBuilder = new RepositoryClassBuilder();
+    private final DetailDataClassBuilder repositoryClassBuilder = new RepositoryDataClassBuilder();
     private final BaseDataClassBuilder baseDataClassBuilder = new BaseDataClassBuilder();
     private final ServiceClassBuilder serviceClassBuilder = new ServiceClassBuilder();
     private final FacadeClassBuilder facadeClassBuilder = new FacadeClassBuilder();
@@ -92,8 +93,10 @@ public class SimpleGenerator {
      * @param mainDomain   是否是主领域，如果是false， 则只生成Data Form Repository Service 代码
      * @throws Exception
      */
-    public void generateALl(Class entityClass,boolean overWrite, boolean mainDomain) throws Exception {
+    public void generateALl(Class entityClass, boolean overWrite, boolean mainDomain) throws Exception {
         String projectRoot = getProjectRoot(entityClass);
+        ExEntityClass exEntityClass = new ExEntityClass(entityClass);
+
         String bizName = GeneratorUtils.getBizName(entityClass.getSimpleName());
         final String dataPackageName = getBaseDataClassPackage(entityClass);
         final String formPackageName = getFormClassPackage(entityClass);
@@ -107,11 +110,11 @@ public class SimpleGenerator {
 //            System.out.println(genericInterfaces[i]);
 //        }
         // Generate Data
-        final TypeSpec dateTypeSpec = baseDataClassBuilder.buildTypeSpec(entityClass, bizName + dataClassSuffix);
+        final TypeSpec dateTypeSpec = baseDataClassBuilder.buildTypeSpec(exEntityClass, bizName + dataClassSuffix);
         generate(overWrite,getSrcFolder(projectRoot, SDK_MODULE), dataPackageName, dateTypeSpec);
 
         // Generate form Class
-        final TypeSpec formTypeSpec = formClassBuilder.buildTypeSpec(entityClass, bizName + formClassSuffix);
+        final TypeSpec formTypeSpec = formClassBuilder.buildTypeSpec(exEntityClass, bizName + formClassSuffix);
         generate(overWrite,getSrcFolder(projectRoot, SDK_MODULE), formPackageName, formTypeSpec);
 
         // Generate Repository
@@ -131,7 +134,7 @@ public class SimpleGenerator {
         final Class<?> serviceClass = Class.forName(GeneratorUtils.getFullClassName(servicePackageName, serviceTypeSpec.name));
         final Class<?> dataClass = Class.forName(GeneratorUtils.getFullClassName(dataPackageName, dateTypeSpec.name));
         final Class<?> formClass = Class.forName(GeneratorUtils.getFullClassName(formPackageName, formTypeSpec.name));
-        final TypeSpec facadeTypeSpec = facadeClassBuilder.buildTypeSpec(entityClass, dataClass, formClass,serviceClass, bizName + facadeClassSuffix);
+        final TypeSpec facadeTypeSpec = facadeClassBuilder.buildTypeSpec(exEntityClass, dataClass, formClass,serviceClass, bizName + facadeClassSuffix);
         generate(overWrite,getSrcFolder(projectRoot, FACADE_MODULE), facadePackageName, facadeTypeSpec);
 
         // Generator Controller
@@ -213,8 +216,12 @@ public class SimpleGenerator {
      * @throws ClassNotFoundException
      * @throws MalformedURLException
      */
-    protected void loadClassFromFile(File file, String packageName, String name) throws ClassNotFoundException, IOException {
-        CompilerUtils.loadFromResource(GeneratorUtils.getFullClassName(packageName, name), getJavaFilePath(file,packageName, name));
+    protected void loadClassFromFile(File file, String packageName, String name) throws IOException, ClassNotFoundException {
+        try {
+            Class.forName(GeneratorUtils.getFullClassName(packageName, name));
+        } catch (ClassNotFoundException e) {
+            CompilerUtils.loadFromResource(GeneratorUtils.getFullClassName(packageName, name), getJavaFilePath(file,packageName, name));
+        }
     }
 
     private String getBaseDataClassPackage(Class entityClass){
@@ -239,7 +246,7 @@ public class SimpleGenerator {
 
     private String getFacadeClassPackage(Class entityClass){
         String parentPackageName = getParentPackage(entityClass);
-        return parentPackageName + ".facade." + facadeClassSuffix.toLowerCase() + ".admin";
+        return parentPackageName + ".facade.admin";
     }
 
     private String getControllerClassPackage(Class entityClass){

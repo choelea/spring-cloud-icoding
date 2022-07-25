@@ -12,12 +12,14 @@ import javax.lang.model.element.Modifier;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
+import static tech.icoding.xcode.generator.builder.GeneratorUtils.*;
+
 /**
  * 用于生成对应的*DataClass
  * @author : Joe
  * @date : 2022/4/28
  */
-public class DataClassBuilder extends AbstractClassBuilder{
+public class DetailDataClassBuilder extends AbstractClassBuilder{
 
     public TypeSpec buildTypeSpec(Class entityClass, String targetClassName) {
         final Type firstGenericParameter = GeneratorUtils.getFirstGenericParameter(entityClass);
