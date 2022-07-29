@@ -6,8 +6,8 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import tech.icoding.xcode.generator.field.ExEntityClass;
-import tech.icoding.xcode.generator.field.ExField;
+import tech.icoding.xcode.model.ExEntityClass;
+import tech.icoding.xcode.model.ExField;
 import tech.icoding.xcode.model.ClassTree;
 
 import javax.lang.model.element.Modifier;

@@ -5,9 +5,9 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import lombok.Data;
 import org.springframework.util.Assert;
-import tech.icoding.xcode.ClassConvention;
-import tech.icoding.xcode.generator.builder.GeneratorUtils;
-import tech.icoding.xcode.generator.field.ExField;
+import tech.icoding.xcode.model.ClassConvention;
+import tech.icoding.xcode.GeneratorUtils;
+import tech.icoding.xcode.model.ExField;
 import tech.icoding.xcode.model.ClassTree;
 
 import javax.lang.model.element.Modifier;

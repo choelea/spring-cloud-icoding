@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 public class UserForm implements Serializable {
-  private static final long serialVersionUID = 812166257993381264l;
+  private static final long serialVersionUID = 895711626683132733l;
 
   private String userName;
 

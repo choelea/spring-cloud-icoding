@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tech.icoding.sci.facade.admin.UserFacade;
 import tech.icoding.sci.sdk.common.PageData;
 import tech.icoding.sci.sdk.data.UserData;
-import tech.icoding.sci.sdk.form.UserForm;
+import tech.icoding.sci.sdk.form.admin.UserForm;
 
 @RestController
 @RequestMapping("/users")

@@ -10,10 +10,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import tech.icoding.xcode.ClassConvention;
-import tech.icoding.xcode.generator.builder.GeneratorUtils;
-import tech.icoding.xcode.generator.field.ExEntityClass;
-import tech.icoding.xcode.generator.field.ExField;
+import tech.icoding.xcode.model.ClassConvention;
+import tech.icoding.xcode.GeneratorUtils;
+import tech.icoding.xcode.model.ExEntityClass;
+import tech.icoding.xcode.model.ExField;
 import tech.icoding.xcode.model.ClassTree;
 
 import javax.lang.model.element.Modifier;

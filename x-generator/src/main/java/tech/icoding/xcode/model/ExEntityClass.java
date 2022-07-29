@@ -1,8 +1,8 @@
-package tech.icoding.xcode.generator.field;
+package tech.icoding.xcode.model;
 
 import lombok.Data;
 import tech.icoding.sci.core.annotation.Composition;
-import tech.icoding.xcode.generator.builder.GeneratorUtils;
+import tech.icoding.xcode.GeneratorUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

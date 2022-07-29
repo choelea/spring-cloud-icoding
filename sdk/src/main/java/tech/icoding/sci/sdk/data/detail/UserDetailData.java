@@ -8,7 +8,7 @@ import tech.icoding.sci.sdk.data.UserData;
 
 @Data
 public class UserDetailData extends UserData {
-  private static final long serialVersionUID = 389793338795915787l;
+  private static final long serialVersionUID = 611410242151865495l;
 
   private RoleData mainRole;
 

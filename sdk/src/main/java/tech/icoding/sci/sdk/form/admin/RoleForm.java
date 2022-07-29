@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class RoleForm implements Serializable {
-  private static final long serialVersionUID = 352134059549548974l;
+  private static final long serialVersionUID = 886238099689450704l;
 
   private String name;
 

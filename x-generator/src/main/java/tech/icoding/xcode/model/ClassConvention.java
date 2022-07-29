@@ -1,6 +1,6 @@
-package tech.icoding.xcode;
+package tech.icoding.xcode.model;
 
-import tech.icoding.xcode.generator.builder.GeneratorUtils;
+import tech.icoding.xcode.GeneratorUtils;
 
 /**
  * 各个Class名称约定
@@ -32,7 +32,7 @@ public class ClassConvention {
     }
 
     public String getFormClassPackage() {
-        return basePackage + ".sdk.form";
+        return basePackage + ".sdk.form.admin";
     }
 
     public String getFormClassSimpleName() {

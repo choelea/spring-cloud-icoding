@@ -13,7 +13,7 @@ import tech.icoding.sci.core.entity.UserEntity;
 import tech.icoding.sci.core.service.RoleService;
 import tech.icoding.sci.core.service.UserService;
 import tech.icoding.sci.sdk.data.UserData;
-import tech.icoding.sci.sdk.form.UserForm;
+import tech.icoding.sci.sdk.form.admin.UserForm;
 
 @Component
 public class UserFacade {

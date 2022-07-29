@@ -1,7 +1,6 @@
 package tech.icoding.xcode.model;
 
 import lombok.Data;
-import tech.icoding.xcode.generator.field.ExEntityClass;
 
 /**
  * 记录下来

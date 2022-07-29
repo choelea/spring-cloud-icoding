@@ -7,7 +7,7 @@ import tech.icoding.sci.sdk.common.BaseData;
 
 @Data
 public class RoleData extends BaseData<Long> {
-  private static final long serialVersionUID = 115521647145927720l;
+  private static final long serialVersionUID = 716260028214511174l;
 
   private Long id;
 

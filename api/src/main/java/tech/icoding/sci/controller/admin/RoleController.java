@@ -1,4 +1,4 @@
-package tech.icoding.sci.api.controller.admin;
+package tech.icoding.sci.controller.admin;
 
 import java.lang.Long;
 import org.springframework.data.domain.Page;
@@ -30,8 +30,8 @@ public class RoleController {
    */
   @GetMapping("/{id}")
   public RoleData get(@PathVariable final Long id) {
-    final RoleData roleData = roleFacade.get(id);
-    return roleData;
+    final RoleData data = roleFacade.get(id);
+    return data;
   }
 
   @GetMapping
@@ -45,16 +45,16 @@ public class RoleController {
    * Create
    */
   @PostMapping
-  public RoleData create(@RequestBody final RoleForm roleForm) {
-    return roleFacade.create(roleForm);
+  public RoleData create(@RequestBody final RoleForm form) {
+    return roleFacade.create(form);
   }
 
   /**
    * Create
    */
   @PutMapping("/{id}")
-  public RoleData update(@PathVariable final Long id, @RequestBody final RoleForm roleForm) {
-    return roleFacade.update(id, roleForm);
+  public RoleData update(@PathVariable final Long id, @RequestBody final RoleForm form) {
+    return roleFacade.update(id, form);
   }
 
   /**

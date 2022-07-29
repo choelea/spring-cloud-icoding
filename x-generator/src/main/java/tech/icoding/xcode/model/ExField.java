@@ -1,4 +1,4 @@
-package tech.icoding.xcode.generator.field;
+package tech.icoding.xcode.model;
 
 
 import com.squareup.javapoet.FieldSpec;

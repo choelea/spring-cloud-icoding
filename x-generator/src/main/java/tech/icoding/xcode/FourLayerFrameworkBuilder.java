@@ -1,7 +1,7 @@
 package tech.icoding.xcode;
 
 import tech.icoding.xcode.builder.*;
-import tech.icoding.xcode.generator.builder.GeneratorUtils;
+import tech.icoding.xcode.model.ClassConvention;
 import tech.icoding.xcode.model.ClassTree;
 
 /**

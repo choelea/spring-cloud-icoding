@@ -1,8 +1,7 @@
-package tech.icoding.xcode.generator.builder;
+package tech.icoding.xcode;
 
 import com.squareup.javapoet.ParameterizedTypeName;
 import org.apache.commons.lang3.StringUtils;
-import tech.icoding.sci.core.annotation.FormIgnore;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -46,14 +45,7 @@ public class GeneratorUtils {
         return simpleName.substring(0, end );
     }
 
-    /**
-     * 检查是否包含FormIgnore的注解
-     * @param field
-     * @return
-     */
-    public static boolean isFormIgnored(Field field){
-        return field.getAnnotation(FormIgnore.class)==null?false:true;
-    }
+
 
     public static String getFullClassName(String packageName, String name){
         return packageName + "." + name;
@@ -199,19 +191,4 @@ public class GeneratorUtils {
     }
 
 
-//    /**
-//     * 获取表单需要的关系字段。
-//     * @param entityClass
-//     * @return
-//     */
-//    public static List<Field> getRelatedFieldsForForm(Class entityClass){
-//        final Field[] declaredFields = entityClass.getDeclaredFields();
-//        List<Field> list = new ArrayList<>();
-//        for (int i = 0; i < declaredFields.length; i++) {
-//            if(!isFormIgnored(declaredFields[i]) && hasRelation(declaredFields[i])){
-//                list.add(declaredFields[i]);
-//            }
-//        }
-//        return list;
-//    }
 }

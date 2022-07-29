@@ -5,8 +5,8 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import net.openhft.compiler.CompilerUtils;
 import org.apache.commons.lang3.RandomUtils;
-import tech.icoding.xcode.generator.builder.GeneratorUtils;
-import tech.icoding.xcode.generator.field.ExField;
+import tech.icoding.xcode.GeneratorUtils;
+import tech.icoding.xcode.model.ExField;
 import tech.icoding.xcode.model.ClassTree;
 
 import javax.lang.model.element.Modifier;
