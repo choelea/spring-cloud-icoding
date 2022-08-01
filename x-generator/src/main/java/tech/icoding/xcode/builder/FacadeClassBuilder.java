@@ -36,67 +36,116 @@ public class FacadeClassBuilder extends AbstractBuilder {
         final ExEntityClass exEntityClass = classTree.getExEntityClass();
         final Class serviceClass = classTree.getServiceClz();
         final String serviceFieldName = StringUtils.uncapitalize(serviceClass.getSimpleName());
-        // 获取所有创建此实体需要用到的相关实体，主要用于添加对应的Service类及Facade类
-        Map<String, ExField> map = new HashMap<>();
-        exEntityClass.getFormFields().forEach(exField -> {
-            if(exField.isRelated()){
-                map.put(exField.getName(), exField);
-            }
-        });
-//        exEntityClass.getRelatedDataFields().forEach(exField -> {
-//            map.put(exField.getName(), exField);
-//        });
 
-        //添加本实体相关的Service
-        final List<FieldSpec> fieldSpecs = new ArrayList<>();
-        fieldSpecs.add(FieldSpec.builder(serviceClass, serviceFieldName, Modifier.PRIVATE).build());
-
-        //构造器构建
-        final MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(serviceClass, serviceFieldName)
-                .addStatement("this.$N = $N", serviceFieldName, serviceFieldName);
-
-        //类字段和构造器添加其他service
-
-        Set<ExEntityClass> set = new HashSet<>();//过滤掉重复
-        map.values().forEach(exField -> {
-            set.add(new ExEntityClass(exField.getRelatedEntityClass()));
-        });
-        set.forEach( exEntityClz->{
-            String className = getServiceClassName(exEntityClz.getEntityClass());
-
-            try {
-                // service class
-                Class clazz = Class.forName(GeneratorUtils.getFullClassName(serviceClass.getPackage().getName(), className));
-                String classVariable = StringUtils.uncapitalize(className);
-                //Service 的构造参数
-                constructorBuilder.addParameter(clazz, classVariable)
-                        .addStatement("this.$N = $N", classVariable, classVariable);
-                //添加需要用到的其他实体对应的Service
-                fieldSpecs.add(FieldSpec.builder(clazz, StringUtils.uncapitalize(className), Modifier.PRIVATE).build());
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
-
-
-        MethodSpec constructor = constructorBuilder.build();
 
         // 构建其他方法
         final TypeSpec.Builder builder = TypeSpec.classBuilder(simpleClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Component.class)
-                .addFields(fieldSpecs)
-                .addMethod(constructor)
-                .addMethod(buildGetMethod(exEntityClass, classTree.getBaseDataClz(), serviceFieldName))
+                .addFields(buildFieldSpec(classTree))
+                .addMethod(buildConstructor(classTree))
+                .addMethod(buildGetMethod(exEntityClass, classTree.getDetailDataClz(), serviceFieldName))
                 .addMethod(buildFindMethod(exEntityClass.getEntityClass(),classTree.getBaseDataClz(), serviceFieldName))
                 .addMethod(buildCreateMethod(exEntityClass.getEntityClass(),classTree.getFormClz(),classTree.getBaseDataClz(), serviceFieldName))
                 .addMethod(buildUpdateMethod(exEntityClass, classTree.getFormClz(),classTree.getBaseDataClz(), serviceFieldName))
                 .addMethod(buildDeleteMethod(exEntityClass, serviceFieldName))
-                .addMethod(buildConvertToEntityMethod(exEntityClass, classTree.getFormClz(), map))
-                .addMethod(buildConvertToDataMethod(exEntityClass.getEntityClass(), classTree.getBaseDataClz()));
+                .addMethod(buildConvertToEntityMethod(exEntityClass, classTree.getFormClz()))
+                .addMethod(buildConvertToDataMethod(exEntityClass.getEntityClass(), classTree.getBaseDataClz()))
+                .addMethod(buildConvertToDetailDataMethod(classTree));
         return builder.build();
+    }
+
+    /**
+     * 构建类成员变量， Service成员和Facade成员
+     * @param classTree
+     * @return
+     */
+    private List<FieldSpec> buildFieldSpec(ClassTree classTree){
+        final List<FieldSpec> list = new ArrayList<>();
+        final List<FieldSpec> fieldSpecs = new ArrayList<>();
+        final Class serviceClass = classTree.getServiceClz();
+        final String serviceFieldName = StringUtils.uncapitalize(serviceClass.getSimpleName());
+        fieldSpecs.add(FieldSpec.builder(serviceClass, serviceFieldName, Modifier.PRIVATE).build());
+
+        final ExEntityClass exEntityClass = classTree.getExEntityClass();
+        Set<Class> classSet = new HashSet<>();
+        classSet.addAll(getRelatedFacadeClassSet(exEntityClass));
+        classSet.addAll(getRelatedServiceClassSet(exEntityClass));
+
+        classSet.forEach(clz->{
+            fieldSpecs.add(FieldSpec.builder(clz, StringUtils.uncapitalize(clz.getSimpleName()), Modifier.PRIVATE).build());
+        });
+
+        return list;
+    }
+    /**
+     * 构建构造器方法
+     * @param classTree
+     * @return
+     */
+    private MethodSpec buildConstructor(ClassTree classTree){
+        //构造器构建
+        final ExEntityClass exEntityClass = classTree.getExEntityClass();
+        final Class serviceClass = classTree.getServiceClz();
+        final String serviceFieldName = StringUtils.uncapitalize(serviceClass.getSimpleName());
+        final MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(serviceClass, serviceFieldName)
+                .addStatement("this.$N = $N", serviceFieldName, serviceFieldName);
+        Set<Class> classSet = new HashSet<>();
+        classSet.addAll(getRelatedFacadeClassSet(exEntityClass));
+        classSet.addAll(getRelatedServiceClassSet(exEntityClass));
+
+        classSet.forEach(clz->{
+            //Service 的构造参数
+            constructorBuilder.addParameter(clz, StringUtils.uncapitalize(clz.getSimpleName()))
+                    .addStatement("this.$N = $N", StringUtils.uncapitalize(clz.getSimpleName()), StringUtils.uncapitalize(clz.getSimpleName()));
+        });
+        return constructorBuilder.build();
+    }
+
+    /**
+     * 获取相关的Service Class。 通过Form字段来获取在创建和修改的时候需要用到的其他模型的Service。
+     * @param exEntityClass
+     * @return
+     */
+    private Set<Class> getRelatedServiceClassSet(ExEntityClass exEntityClass){
+        final List<ExField> formFields = exEntityClass.getRelatedFormFields();
+        final Set<Class> serviceClassSet = new HashSet<>();
+        formFields.forEach(exField -> {
+            final Class relatedEntityClass = exField.getRelatedEntityClass();
+            ClassConvention classConvention = new ClassConvention(relatedEntityClass);
+            final Class<?> serviceClass;
+            try {
+                serviceClass = Class.forName(GeneratorUtils.getFullClassName(classConvention.getServiceClassPackage(), classConvention.getServiceClassSimpleName()));
+                serviceClassSet.add(serviceClass);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        return serviceClassSet;
+    }
+
+    /**
+     * 获取关联模型的FacadeClass， 用于在详情Data组装中重用。
+     * @param exEntityClass
+     * @return
+     */
+    private Set<Class> getRelatedFacadeClassSet(ExEntityClass exEntityClass){
+        final List<ExField> relatedDataFields = exEntityClass.getRelatedDataFields();
+        final Set<Class> facadeClassSet = new HashSet<>();
+        relatedDataFields.forEach(exField -> {
+            final Class relatedEntityClass = exField.getRelatedEntityClass();
+            ClassConvention classConvention = new ClassConvention(relatedEntityClass);
+            final Class<?> facadeClass;
+            try {
+                facadeClass = Class.forName(GeneratorUtils.getFullClassName(classConvention.getFacadeClassPackage(), classConvention.getFacadeClassSimpleName()));
+                facadeClassSet.add(facadeClass);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        return facadeClassSet;
     }
 
 
@@ -114,7 +163,7 @@ public class FacadeClassBuilder extends AbstractBuilder {
                 .returns(dataClass)
                 .addParameter(exEntityClass.getIdType(), ExField.IDENTIFIER_NAME)
                 .addStatement("final $T entity = $N.find($N)", exEntityClass.getEntityClass(), serviceFieldName, ExField.IDENTIFIER_NAME)
-                .addStatement("final $T data = $N(entity)", dataClass, METHOD_NAME_CONVERT)
+                .addStatement("final $T data = $N(entity)", dataClass, METHOD_NAME_CONVERT_TO_DETAIL)
                 .addStatement("return data")
                 .addJavadoc("Get by ID")
                 .build();
@@ -230,7 +279,7 @@ public class FacadeClassBuilder extends AbstractBuilder {
                 .build();
     }
 
-    private MethodSpec buildConvertToEntityMethod(ExEntityClass exEntityClass, Class formClass, Map<String, ExField> map){
+    private MethodSpec buildConvertToEntityMethod(ExEntityClass exEntityClass, Class formClass){
 //        final String formVariable = getVariableName(formClass); //Hard code is more easier
         final MethodSpec.Builder builder = MethodSpec.methodBuilder(METHOD_NAME_CONVERT)
                 .addModifiers(Modifier.PRIVATE)
@@ -240,18 +289,17 @@ public class FacadeClassBuilder extends AbstractBuilder {
 //                .addStatement("final $T $N = new $T()", entityClass, getVariableName(entityClass),entityClass)
                 .addStatement("$T.copyProperties(form, entity)", BeanUtils.class);
 
-
-        map.keySet().forEach(key->{
-            final String relatedServiceVariable = StringUtils.uncapitalize(getRelatedServiceClassName(map.get(key)));
-            if(map.get(key).isToManyRelation()){
+        exEntityClass.getRelatedFormFields().forEach(exField->{
+            final String relatedServiceVariable = StringUtils.uncapitalize(getRelatedServiceClassName(exField));
+            if(exField.isToManyRelation()){
                 builder.addStatement("form.$N().forEach(id->{ \n" +
                         "final $T ent = $N.find(id);\n" +
                         "entity.$N().add(ent);\n" +
-                        "})",  map.get(key).methodNameOfGet(),// 由于Form那边生成字段规则一直，所以这里直接用的entity来取， 如果不一致则会出现问题
-                                map.get(key).getRelatedEntityClass(), relatedServiceVariable,
-                                map.get(key).methodNameOfGet());
-            }else if(map.get(key).isToOneRelation()){
-                builder.addStatement("entity.$N($N.find(form.$N()))", map.get(key).methodNameOfSet(), relatedServiceVariable, map.get(key).methodNameOfGet());
+                        "})",  exField.methodNameOfGet(),// 由于Form那边生成字段规则一直，所以这里直接用的entity来取， 如果不一致则会出现问题
+                                exField.getRelatedEntityClass(), relatedServiceVariable,
+                                exField.methodNameOfGet());
+            }else if(exField.isToOneRelation()){
+                builder.addStatement("entity.$N($N.find(form.$N()))", exField.methodNameOfSet(), relatedServiceVariable, exField.methodNameOfGet());
             }
         });
 
@@ -264,32 +312,48 @@ public class FacadeClassBuilder extends AbstractBuilder {
 
 
     /**
-     * private UserDetailData convertToDetail(UserEntity entity) {
-     *         final UserDetailData data = new UserDetailData();
-     *         BeanUtils.copyProperties(entity, data);
      *
-     *         data.setMainRole(roleFacade.convert(entity.getMainRole()));
-     *         data.getRoles().addAll(entity.getRoles().stream().map(
-     *                 roleEntity -> roleFacade.convert(roleEntity)
-     *         ).collect(Collectors.toList()));
-     *         return data;
-     *     }
+     * private UserDetailData convertToDetail(UserEntity entity){
+     *     final UserData data = convert(entity);
+     *     UserDetailData detailData = new UserDetailData();
+     *     BeanUtils.copyProperties(data, detailData);
+     *     entity.getRoles().forEach( roleEntity-> {
+     *       detailData.getRoles().add(roleFacade.convert(roleEntity));
+     *     });
+     *     return detailData;
+     *   }
      * @param classTree
      * @return
      */
     private MethodSpec buildConvertToDetailDataMethod(ClassTree classTree){
         final Class detailDataClz = classTree.getDetailDataClz();
+
         final MethodSpec.Builder builder = MethodSpec.methodBuilder(METHOD_NAME_CONVERT_TO_DETAIL)
                 .addModifiers(Modifier.PRIVATE)
                 .returns(detailDataClz)
                 .addParameter(classTree.getEntityClz(), "entity")
-                .addStatement("final $T data = new $T()", detailDataClz, detailDataClz)
-                .addStatement("$T.copyProperties(entity, data)", BeanUtils.class);
 
+                .addStatement("final $T data = $N(entity)", classTree.getBaseDataClz(), METHOD_NAME_CONVERT)
+                .addStatement("final $T detailData = new $N(entity)", detailDataClz, detailDataClz)
+                .addStatement("$T.copyProperties(data, detailData)", BeanUtils.class);
 
+        final List<ExField> relatedDataFields = classTree.getExEntityClass().getRelatedDataFields();
+        for (int i = 0; i < relatedDataFields.size(); i++) {
+            ExField exField = relatedDataFields.get(i);
+            final Class relatedEntityClass = exField.getRelatedEntityClass();
+            ClassConvention classConvention = new ClassConvention(relatedEntityClass);
+            if(exField.isToOneRelation()){
+                builder.addStatement("data.$N($N.convert(entity.$N)", exField.methodNameOfSet(), StringUtils.uncapitalize(classConvention.getFacadeClassSimpleName()),
+                        exField.methodNameOfGet());
+            }else if(exField.isToManyRelation()){
+                builder.addStatement("entity.$N().forEach( e -> {\n" +
+                        "               detailData.$N().add($N.convert(e));\n" +
+                        "            })", exField.methodNameOfGet(), exField.methodNameOfGet(),StringUtils.uncapitalize(classConvention.getFacadeClassSimpleName()));
+            }
+        }
 
         return builder.addComment("TODO Override logic. (Copy properties is not the best solution, but an convenient one, for special logic, add below here )")
-                .addStatement("return data")
+                .addStatement("return detailData")
                 .addJavadoc("Convert entity to data object")
                 .build();
     }

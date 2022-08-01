@@ -5,5 +5,5 @@ import tech.icoding.sci.sdk.data.RoleData;
 
 @Data
 public class RoleDetailData extends RoleData {
-  private static final long serialVersionUID = 38609664997848813l;
+  private static final long serialVersionUID = 680980198822478949l;
 }

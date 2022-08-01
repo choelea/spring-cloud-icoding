@@ -1,8 +1,5 @@
 package tech.icoding.sci.facade.admin;
 
-import java.lang.Long;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,6 +9,9 @@ import tech.icoding.sci.core.entity.RoleEntity;
 import tech.icoding.sci.core.service.RoleService;
 import tech.icoding.sci.sdk.data.RoleData;
 import tech.icoding.sci.sdk.form.admin.RoleForm;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class RoleFacade {
@@ -81,6 +81,16 @@ public class RoleFacade {
    */
   private RoleData convert(RoleEntity entity) {
     final RoleData data = new RoleData();
+    BeanUtils.copyProperties(entity, data);
+    // TODO Override logic. (Copy properties is not the best solution, but an convenient one, for special logic, add below here )
+    return data;
+  }
+
+  /**
+   * Convert entity to data object
+   */
+  private RoleData convertToDetail(RoleEntity entity) {
+    final RoleData data = convert(entity);
     BeanUtils.copyProperties(entity, data);
     // TODO Override logic. (Copy properties is not the best solution, but an convenient one, for special logic, add below here )
     return data;

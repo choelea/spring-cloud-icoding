@@ -76,6 +76,14 @@ public class ExEntityClass {
         return getExFields().stream().filter(exField -> !exField.isId() && !exField.isExcluded() && !exField.isFormIgnore()).collect(Collectors.toList());
     }
 
+    /**
+     * 返回用于Form的关系字段
+     * @return
+     */
+    public List<ExField> getRelatedFormFields() {
+        return getExFields().stream().filter(exField -> exField.isRelated() && !exField.isExcluded() && !exField.isFormIgnore()).collect(Collectors.toList());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
