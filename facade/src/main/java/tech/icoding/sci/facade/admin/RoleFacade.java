@@ -1,5 +1,8 @@
 package tech.icoding.sci.facade.admin;
 
+import java.lang.Long;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -8,25 +11,26 @@ import org.springframework.stereotype.Component;
 import tech.icoding.sci.core.entity.RoleEntity;
 import tech.icoding.sci.core.service.RoleService;
 import tech.icoding.sci.sdk.data.RoleData;
+import tech.icoding.sci.sdk.data.detail.RoleDetailData;
 import tech.icoding.sci.sdk.form.admin.RoleForm;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class RoleFacade {
   private RoleService roleService;
 
-  public RoleFacade(RoleService roleService) {
+  private PermissionFacade permissionFacade;
+
+  public RoleFacade(RoleService roleService, PermissionFacade permissionFacade) {
     this.roleService = roleService;
+    this.permissionFacade = permissionFacade;
   }
 
   /**
    * Get by ID
    */
-  public RoleData get(Long id) {
+  public RoleDetailData get(Long id) {
     final RoleEntity entity = roleService.find(id);
-    final RoleData data = convert(entity);
+    final RoleDetailData data = convertToDetail(entity);
     return data;
   }
 
@@ -44,21 +48,21 @@ public class RoleFacade {
   /**
    * Create Entity and save to database
    */
-  public RoleData create(RoleForm form) {
+  public RoleDetailData create(RoleForm form) {
     RoleEntity entity = new RoleEntity();
     convert(form, entity);
     entity = roleService.save(entity);
-    return convert(entity);
+    return convertToDetail(entity);
   }
 
   /**
    * Update Entity  to database
    */
-  public RoleData update(Long id, RoleForm form) {
+  public RoleDetailData update(Long id, RoleForm form) {
     RoleEntity entity = roleService.find(id);
     convert(form, entity);
     entity = roleService.update(entity);
-    return convert(entity);
+    return convertToDetail(entity);
   }
 
   /**
@@ -71,7 +75,7 @@ public class RoleFacade {
   /**
    * Convert form to entity object
    */
-  private void convert(RoleForm form, RoleEntity entity) {
+  public void convert(RoleForm form, RoleEntity entity) {
     BeanUtils.copyProperties(form, entity);
     // TODO Override logic. (Copy properties is not the best solution, but an convenient one, for special logic, add below here )
   }
@@ -79,7 +83,7 @@ public class RoleFacade {
   /**
    * Convert entity to data object
    */
-  private RoleData convert(RoleEntity entity) {
+  public RoleData convert(RoleEntity entity) {
     final RoleData data = new RoleData();
     BeanUtils.copyProperties(entity, data);
     // TODO Override logic. (Copy properties is not the best solution, but an convenient one, for special logic, add below here )
@@ -89,10 +93,14 @@ public class RoleFacade {
   /**
    * Convert entity to data object
    */
-  private RoleData convertToDetail(RoleEntity entity) {
+  public RoleDetailData convertToDetail(RoleEntity entity) {
     final RoleData data = convert(entity);
-    BeanUtils.copyProperties(entity, data);
+    final RoleDetailData detailData = new RoleDetailData();
+    BeanUtils.copyProperties(data, detailData);
+    entity.getPermissions().forEach( e -> {
+                       detailData.getPermissions().add(permissionFacade.convert(e));
+                    });
     // TODO Override logic. (Copy properties is not the best solution, but an convenient one, for special logic, add below here )
-    return data;
+    return detailData;
   }
 }

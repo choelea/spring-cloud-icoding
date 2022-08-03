@@ -41,6 +41,9 @@ public class RoleEntity extends BaseEntity<Long>{
     private Integer delFlag;
 
 
+    @ManyToMany
+    private Set<PermissionEntity> permissions;
+
     /**
      * mappedBy = "roles" 表明了关系是交由UserEntity来维护，这里很重要。因为Role是独立User先创建的，而创建User需要选定指定的Role。
      */
