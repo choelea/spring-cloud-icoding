@@ -40,7 +40,6 @@ public class RoleEntity extends BaseEntity<Long>{
 
     private Integer delFlag;
 
-
     @ManyToMany
     private Set<PermissionEntity> permissions;
 
