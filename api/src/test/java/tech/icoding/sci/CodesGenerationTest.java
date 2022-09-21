@@ -12,8 +12,8 @@ public class CodesGenerationTest {
     public static void main(String[] args) throws Exception {
         FourLayerFrameworkBuilder fourLayerFrameworkBuilder = new FourLayerFrameworkBuilder();
 
-        fourLayerFrameworkBuilder.build(PermissionEntity.class);
-        fourLayerFrameworkBuilder.build(RoleEntity.class);
+        fourLayerFrameworkBuilder.build(PermissionEntity.class, 2);
+        fourLayerFrameworkBuilder.build(RoleEntity.class, 3);
 //        fourLayerFrameworkBuilder.build(UserEntity.class);
     }
 }

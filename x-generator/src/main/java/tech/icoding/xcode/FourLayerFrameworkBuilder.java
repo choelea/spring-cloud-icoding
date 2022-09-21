@@ -34,10 +34,19 @@ public class FourLayerFrameworkBuilder implements FrameworkBuilder{
         }
     }
     @Override
-    public void build(Class entityClasses) throws Exception {
+    public void build(Class entityClasses, int deep) throws Exception {
+
         ClassConvention classConvention = new ClassConvention(entityClasses);
         ClassTree classTree = new ClassTree(entityClasses);
 
+        // 构建iService层
+        final Class repositoryClz = repositoryClassBuilder.build(classTree, MODULE_FOLDERS[1], classConvention.getRepositoryClassPackage(),classConvention.getRepositoryClassSimpleName());
+        classTree.setRepositoryClz(repositoryClz);
+
+        final Class serviceClz = serviceClassBuilder.build(classTree, MODULE_FOLDERS[1], classConvention.getServiceClassPackage(), classConvention.getServiceClassSimpleName());
+        classTree.setServiceClz(serviceClz);
+
+        if(deep < 2) return; // 只构建Repo 和 Service
 
         //构建SDK层的Data和Form
         final Class baseDataClz = baseDataClassBuilder.build(classTree, MODULE_FOLDERS[0], classConvention.getBaseDataClassPackage(), classConvention.getBaseDataClassSimpleName());
@@ -49,17 +58,12 @@ public class FourLayerFrameworkBuilder implements FrameworkBuilder{
         final Class detailDataClz = detailDataClassBuilder.build(classTree, MODULE_FOLDERS[0], classConvention.getDetailDataClassPackage(), classConvention.getDetailDataClassSimpleName());
         classTree.setDetailDataClz(detailDataClz);
 
-        // 构建iService层
-        final Class repositoryClz = repositoryClassBuilder.build(classTree, MODULE_FOLDERS[1], classConvention.getRepositoryClassPackage(),classConvention.getRepositoryClassSimpleName());
-        classTree.setRepositoryClz(repositoryClz);
-
-        final Class serviceClz = serviceClassBuilder.build(classTree, MODULE_FOLDERS[1], classConvention.getServiceClassPackage(), classConvention.getServiceClassSimpleName());
-        classTree.setServiceClz(serviceClz);
-
         // 构建facade层
         final Class facadeClz = facadeClassBuilder.build(classTree, MODULE_FOLDERS[2], classConvention.getFacadeClassPackage(), classConvention.getFacadeClassSimpleName());
         classTree.setFacadeClz(facadeClz);
 
+
+        if(deep < 2) return; // 只构建Repo 和 Service
         // 构建API层
 
         final Class controllerClz = controllerClassBuilder.build(classTree, MODULE_FOLDERS[3], classConvention.getControllerClassPackage(), classConvention.getControllerClassSimpleName());
